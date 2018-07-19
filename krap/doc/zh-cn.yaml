@@ -1,0 +1,29 @@
+---
+name: Kevin Plan for Ranzhi
+code: krap
+type: extension
+copyright: >
+  Kevin Co,
+site: 
+author: 'Kevin<3301647@qq.com>'
+abstract: Kevin Plan for Ranzhi.
+desc: >
+  Kevin Plan for Ranzhi.
+install: |
+  1. Install through the buildin extension manager.
+license: |
+  Kevin
+releases:
+  1.1:
+    ranzhi:
+      compatible: 4.6.1
+      incompatible:
+    charge: kevin
+    date: 2018-4-18
+    conflicts: null
+    depends: null
+    license: ZPL
+    changelog: 1. 界面优化
+    ranzhico:
+      compatible: all
+      incompatible:
