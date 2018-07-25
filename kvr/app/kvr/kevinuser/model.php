@@ -449,6 +449,21 @@ class kevinuserModel extends model {
 	}
 
 	/**
+	 * Get user info by ID.
+	 *
+	 * @param  int    $userID
+	 * @access public
+	 * @return object|bool
+	 */
+	public function getById($userID, $field = 'account')
+	{
+		$user = $this->dao->select('*')->from(TABLE_USER)->where($field)->eq($userID)->fetch();
+		if(!$user) return false;
+		$user->last = date(DT_DATETIME1, $user->last);
+		return $user;
+	}
+
+	/**
 	 * Get by id.
 	 * 
 	 * @param  array    $deptID 
@@ -560,6 +575,58 @@ class kevinuserModel extends model {
 	}
 
 	/**
+	 * Get the account=>realname pairs.
+	 *
+	 * @param  string $params   noletter|noempty|noclosed|nodeleted|withguest|pofirst|devfirst|qafirst|pmfirst|realname, can be sets of theme
+	 * @param  string $usersToAppended  account1,account2
+	 * @access public
+	 * @return array
+	 */
+	public function getPairs($params = '', $usersToAppended = '')
+	{
+		if(defined('TUTORIAL')) return $this->loadModel('tutorial')->getUserPairs();
+		/* Set the query fields and orderBy condition.
+		 *
+		 * If there's xxfirst in the params, use INSTR function to get the position of role fields in a order string,
+		 * thus to make sure users of this role at first.
+		 */
+		$fields = 'account, realname, deleted';
+		if(strpos($params, 'pofirst') !== false) $fields .= ", INSTR(',pd,po,', role) AS roleOrder";
+		if(strpos($params, 'pdfirst') !== false) $fields .= ", INSTR(',po,pd,', role) AS roleOrder";
+		if(strpos($params, 'qafirst') !== false) $fields .= ", INSTR(',qd,qa,', role) AS roleOrder";
+		if(strpos($params, 'qdfirst') !== false) $fields .= ", INSTR(',qa,qd,', role) AS roleOrder";
+		if(strpos($params, 'pmfirst') !== false) $fields .= ", INSTR(',td,pm,', role) AS roleOrder";
+		if(strpos($params, 'devfirst')!== false) $fields .= ", INSTR(',td,pm,qd,qa,dev,', role) AS roleOrder";
+		$orderBy = strpos($params, 'first') !== false ? 'roleOrder DESC, account' : 'account';
+
+		/* Get raw records. */
+		$users = $this->dao->select($fields)->from(TABLE_USER)
+			->beginIF(strpos($params, 'nodeleted') !== false)->where('deleted')->eq(0)->fi()
+			->orderBy($orderBy)
+			->fetchAll('account');
+		if($usersToAppended) $users += $this->dao->select($fields)->from(TABLE_USER)->where('account')->in($usersToAppended)->fetchAll('account');
+
+		/* Cycle the user records to append the first letter of his account. */
+		foreach($users as $account => $user)
+		{
+			$firstLetter = ucfirst(substr($account, 0, 1)) . ':';
+			if(strpos($params, 'noletter') !== false){
+				$users[$account] =  (($user->deleted and strpos($params, 'realname') === false) ? $account : ($user->realname ? $user->realname : $account));
+
+			} else {
+				$users[$account] =  $firstLetter . (($user->deleted and strpos($params, 'realname') === false) ? $account : ($user->realname ? $user->realname . "(".$account.")": $account));
+			}
+		}
+
+		/* Append empty, closed, and guest users. */
+		if(strpos($params, 'noempty')   === false) $users = array('' => '') + $users;
+		if(strpos($params, 'noclosed')  === false) $users = $users + array('closed' => 'Closed');
+		if(strpos($params, 'withguest') !== false) $users = $users + array('guest' => 'Guest');
+
+		return $users;
+	}
+
+	/**
 	 * Get record by id.
 	 * 
 	 * @param  int $id
@@ -664,21 +731,6 @@ class kevinuserModel extends model {
 				->where('parent')->eq($this->config->kevinuser->classID['role'])
 				->orderBy('order')
 				->fetchPairs('code', 'titleCN');
-	}
-	
-	/**
-	 * Get user info by ID.
-	 *
-	 * @param  int    $userID
-	 * @access public
-	 * @return object|bool
-	 */
-	public function getById($userID, $field = 'account')
-	{
-		$user = $this->dao->select('*')->from(TABLE_USER)->where($field)->eq($userID)->fetch();
-		if(!$user) return false;
-		$user->last = date(DT_DATETIME1, $user->last);
-		return $user;
 	}
 
 	/**
@@ -866,6 +918,24 @@ class kevinuserModel extends model {
 			->exec();
 		$allChanges[$id] = commonModel::createChanges($oldRecord, $data);
 		return $allChanges;
+	}
+
+	/**
+	 * Set users list.
+	 *
+	 * @param  array    $users
+	 * @param  string   $account
+	 * @access public
+	 * @return html
+	 */
+	public function setUserList($users, $account)
+	{
+		if(!isset($users[$account]))
+		{
+			$user = $this->getById($account);
+			if($user and $user->deleted) $users[$account] = zget($user, 'realname', $account);
+		}
+		return html::select('account', $users, $account, "onchange=\"switchAccount(this.value, '{$this->app->getMethodName()}')\" class='form-control chosen'");
 	}
 	
 	/**

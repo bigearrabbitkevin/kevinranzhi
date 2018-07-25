@@ -144,4 +144,20 @@ class kevindept extends control
         $users = array('' => '') + $this->kevindept->getDeptUserPairs($kevindept);
         die(html::select('user', $users, $user, "class='form-control chosen'"));
     }
+
+	/**
+	 * Get parents.
+	 *
+	 * @param  int    $deptID
+	 * @access public
+	 * @return array
+	 */
+	public function getParents($deptID)
+	{
+		if($deptID == 0) return array();
+		$path = $this->dao->select('path')->from(TABLE_DEPT)->where('id')->eq($deptID)->fetch('path');
+		$path = substr($path, 1, -1);
+		if(empty($path)) return array();
+		return $this->dao->select('*')->from(TABLE_DEPT)->where('id')->in($path)->orderBy('grade')->fetchAll();
+	}
 }

@@ -10,16 +10,11 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
-<div id='featurebar'>
-    <div class='heading'><?php echo html::icon($lang->icons['group']);?> <?php echo $title;?></div>
-    <div class='actions'>
-		<?php
-		if (commonModel::hasPriv('kevinuser', 'deptcreate')) echo html::a($this->createLink('kevinuser', 'deptcreate', "", '', true)
-				, "<i class='icon-plus'></i>" . $lang->kevinuser->deptcreate, '', "data-toggle='modal' data-type='iframe' data-icon='check'");
-		?>
-    </div>
-</div>
+<?php include '../../common/view/header.html.php';
+css::import($jsRoot.'kevin/common.css');
+js::import($jsRoot.'kevin/common.js');?>
+
+<div class="with-side <?php echo $this->cookie->todoCalendarSide == 'hide' ? 'hide-side' : '' ?>">
 <div class='side'>
     <a class='side-handle' data-id='gradeTree'><i class='icon-caret-left'></i></a>
     <div class='side-body'>
@@ -51,6 +46,7 @@
 			</tbody></table>
 	</fieldset>
 	<?php endif;?>
+	<div class='panel'>
     <form method='post' id='deptForm'>
         <table class='table table-condensed  table-hover table-striped tablesorter ' id='KevinValueList'>
             <thead>
@@ -135,5 +131,7 @@
             </tfoot>
         </table>
     </form>
+	</div>
+</div>
 </div>
 <?php include '../../common/view/footer.html.php';?>

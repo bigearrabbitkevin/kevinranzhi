@@ -11,6 +11,7 @@
  */
 ?>
 <?php include '../../common/view/header.html.php';?>
+<?php include '../../../sys/common/view/chosen.html.php';?>
 <?php include '../../common/view/datepicker.html.php';?>
 <div class='container mw-800px'>
   <div id='titlebar'>
@@ -35,7 +36,8 @@
       </tr>
       <tr>
         <th><?php echo $lang->group->priv;?></th>
-        <td colspan='3'><?php echo html::select('groups[]', $groups, $userGroups, 'size=3 multiple=multiple class="form-control chosen"');?></td>
+        <td colspan='3'><?php echo html::select('groups[]', $groups, $userGroups, "class='form-control chosen' multiple");?>
+	        </td>
       </tr>
       <tr>
         <th><?php echo $lang->kevinuser->join;?></th>

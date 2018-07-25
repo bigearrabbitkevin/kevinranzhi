@@ -515,7 +515,7 @@ class kevinuser extends control {
 		$this->view->title      = $title;
 		$this->view->position   = $position;
 		$this->view->user       = $user;
-		$this->view->depts      = $this->kevindept->getOptionMenu();
+		$this->view->depts      = $this->loadModel('kevindept')->getOptionMenu();
 		$this->view->userGroups = implode(',', array_keys($userGroups));
 		$this->view->groups     = $this->loadModel('group')->getPairs();
 		
@@ -581,6 +581,31 @@ class kevinuser extends control {
 	 * @return void
 	 */
 	public function index() {
+		$this->display();
+	}
+
+	/**
+	 * The profile of a user.
+	 *
+	 * @param  string $account
+	 * @access public
+	 * @return void
+	 */
+	public function profile($account)
+	{
+		/* Set menu. */
+		$this->view->userList = $this->kevinuser->setUserList($this->kevinuser->getPairs('noempty|noclose|nodeleted'), $account);
+
+		$user = $this->kevinuser->getById($account);
+
+		$this->view->title      = "USER #$user->id $user->account/" . $this->lang->user->profile;
+		$this->view->position[] = $this->lang->user->common;
+		$this->view->position[] = $this->lang->user->profile;
+		$this->view->account    = $account;
+		$this->view->user       = $user;
+		$this->view->groups     = $this->loadModel('group')->getByAccount($account);
+		$this->view->deptPath   = $this->loadModel('kevindept')->getParents($user->dept);
+
 		$this->display();
 	}
 
@@ -844,4 +869,35 @@ class kevinuser extends control {
 		$this->view->depts		 = $this->loadModel('dept')->getOptionMenu();
 		$this->display();
 	}
+
+	/**
+	 * Unlock a user.
+	 *
+	 * @param  int    $account
+	 * @param  string $confirm
+	 * @access public
+	 * @return void
+	 */
+	public function unlock($account, $confirm = 'no') {
+		if ($confirm == 'no') {
+			die(js::confirm($this->lang->kevinuser->confirmUnlock, $this->createLink('kevinuser', 'unlock', "account=$account&confirm=yes")));
+		} else {
+			$this->loadModel('user')->cleanLocked($account);
+			die(js::locate($this->createLink('kevinhours', 'browse'), 'parent'));
+		}
+	}
+
+	public function userLock($account, $confirm = 'no') {
+		if (strpos($this->app->company->admins, ",$account,") === false) {
+			if ($confirm == 'no') {
+				die(js::confirm($this->lang->kevinuser->confirmLock, $this->createLink('kevinuser', 'userLock', "account=$account&confirm=yes")));
+			} else {
+				$this->kevinuser->lockUser($account);
+				die(js::reload('parent.parent'));
+			}
+		} else {
+			die(js::locate($this->createLink('kevinhours', 'browse'), 'parent'));
+		}
+	}
+
 }
