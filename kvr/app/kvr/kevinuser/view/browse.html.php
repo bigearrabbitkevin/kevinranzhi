@@ -23,6 +23,10 @@ $nowTime       = time();
 $longLockTime  = '2030-01-01 00:00:00';
 
 ?>
+<div id='menuActions'>
+  <?php commonModel::printLink('kevinuser', 'create', "dept=$deptID", '<i class="icon-plus"></i> ' . $this->lang->kevinuser->create, "id='createButton' class='btn btn-primary'");?>
+  <?php commonModel::printLink('kevinuser', 'batchCreate', "dept=$deptID", '<i class="icon-plus-sign"></i> ' . $this->lang->kevinuser->batchCreate, "id='createButton' class='btn btn-primary'");?>
+</div>
 <div id='querybox'  class='show' style="margin: -20px -20px 20px;"><?php echo $searchForm ;?></div>
 
 <div class="with-side <?php echo $this->cookie->todoCalendarSide == 'hide' ? 'hide-side' : '' ?>">
@@ -57,7 +61,7 @@ $longLockTime  = '2030-01-01 00:00:00';
 						<th class='text-center w-auto'><?php commonModel::printOrderLink('gender', $orderBy, $vars, $lang->kevinuser->gender); ?></th>
 						<th class='text-center w-auto'><?php commonModel::printOrderLink('last', $orderBy, $vars, $lang->kevinuser->last); ?></th>
 						<th class='text-center w-auto'><?php commonModel::printOrderLink('visits', $orderBy, $vars, $lang->kevinuser->visits); ?></th>
-						<th class='text-center w-auto'><?php echo $lang->actions; ?></th>
+						<th class='text-center w-80px'><?php echo $lang->actions; ?></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -69,7 +73,10 @@ $longLockTime  = '2030-01-01 00:00:00';
 					<?php foreach ($users as $user):
 						$isLock = (strtotime(date('Y-m-d H:i:s')) - strtotime($user->locked)) < $this->config->kevinuser->lockMinutes * 60;
 						if ($isLock) $lockbackground = "style='background:yellow'";
-						else $lockbackground = ""; ?>
+						else $lockbackground = ""; 
+						
+						
+						?>
 						<tr class='text-center'>
 							<td <?php echo $lockbackground; ?> >
 								<?php
@@ -82,40 +89,23 @@ $longLockTime  = '2030-01-01 00:00:00';
 							</td>
 							<td><?php echo $user->account; ?></td>
 							<td><?php if ($user->code) echo $user->code; ?></td>
-							<td><?php
-								if (isset($depts[$user->dept]))
-									echo $depts[$user->dept];
-								else
-									echo '&nbsp;';
-								?></td>
-							<td><?php
-								if (isset($depts[$user->deptdispatch]))
-									echo $depts[$user->deptdispatch];
-								else
-									echo '&nbsp;';
-								?></td>
+							<td><?php if (isset($depts[$user->dept]))echo html::a($this->createLink('kevinuser', 'browse', "param=$user->dept"), $depts[$user->dept]);?></td>
+							<td><?php if (isset($depts[$user->deptdispatch]))	echo html::a($this->createLink('kevinuser', 'browse', "param=$user->deptdispatch"), $depts[$user->deptdispatch]); ?></td>
 							<td><?php echo html::mailto($user->email); ?></td>
 							<td><?php if (isset($lang->kevinuser->genderList[$user->gender])) echo $lang->kevinuser->genderList[$user->gender]; ?></td>
 							<td><?php if ($user->last) echo date('Y-m-d', $user->last); ?></td>
 							<td><?php echo $user->visits; ?></td>
 							<td class='text-left'>
-								<?php echo html::a($this->createLink('kevinuser', 'edit', "userID=$user->id&from=kevinuser"), $lang->kevinuser->edit, "data-toggle='modal' data-id='profile'"); ?>
+								<?php 
+								echo html::a($this->createLink('kevinuser', 'edit', "userID=$user->id&from=kevinuser"), $lang->edit, "data-toggle='modal' data-id='profile'"); 
 
-								<?php
 
-								$isNotAdmin = strpos($this->app->company->admins, ",{$user->account},") === false;
-
-								if ($isNotAdmin) {
-									$titlelockedNone = $lang->kevinuser->lockedNone.$lang->kevinuser->userLock."?";
-									$titlelockedTemp = $lang->kevinuser->lockedTemp.$lang->kevinuser->unlock."?";
-									$titlelockedLong = $lang->kevinuser->lockedLong.$lang->kevinuser->unlock."?";
-									if ((int)$user->locked == 0) {
-										commonModel::printLink('kevinuser', 'userLock', "userID=$user->account", "<i class='icon-unlock-alt text-muted'></i>", "data-type='iframe' data-toggle='modal'");
-									} else if ($user->locked < $longLockTime) {
-										commonModel::printLink('kevinuser', 'unlock', "userID=$user->account", "<i class='icon-lock'></i>", "data-type='iframe' data-toggle='modal'");
-									} else {
-										commonModel::printLink('kevinuser', 'unlock', "userID=$user->account", "<i class='icon-lock text-muted'></i>", "data-type='iframe' data-toggle='modal'");
-									}
+								if ((int)$user->locked == 0) {
+									commonModel::printLink('kevinuser', 'userLock', "userID=$user->account", $lang->kevinuser->lockedNone, "data-type='iframe' data-toggle='modal'");
+								} else if ($user->locked < $longLockTime) {
+									commonModel::printLink('kevinuser', 'unlock', "userID=$user->account", $lang->kevinuser->lockedShort, "data-type='iframe' data-toggle='modal'");
+								} else {
+									commonModel::printLink('kevinuser', 'unlock', "userID=$user->account", $lang->kevinuser->locked, "data-type='iframe' data-toggle='modal'");
 								}
 								?>
 							</td>

@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$lang->kevinuser->common = 'kevin用户管理';
+$lang->kevinuser->common = '用户管理';
 $lang->kevinuser->index  = '首页';
 
 $lang->zt_dept = &$lang->kevinuser;
@@ -90,8 +90,7 @@ $lang->kevinuser->deptParent        = "上级部门";
 $lang->kevinuser->deptPath          = "路径";
 $lang->kevinuser->order             = "排序";
 $lang->kevinuser->manager           = "负责人";
-$lang->kevinuser->email             = "公司email";
-$lang->kevinuser->code              = "公司代码";
+$lang->kevinuser->code              = "代码";
 $lang->kevinuser->topParent         = "顶级";
 
 $lang->kevinuser->confirmDelete   = " 您确定删除数据吗？";
@@ -153,9 +152,11 @@ $lang->kevinuser->manageContacts = "维护联系人";
 
 $lang->kevinuser->lockedTemp = "临时被锁定。";
 $lang->kevinuser->lockedLong = "长期被锁定。";
-$lang->kevinuser->lockedNone = "激活的用户。";
 $lang->kevinuser->userLock   = '锁定用户';
-$lang->kevinuser->unlock     = "解锁用户";
+$lang->kevinuser->unlock     = "解锁";
+$lang->kevinuser->locked     = "锁定";
+$lang->kevinuser->lockedNone = "正常";
+$lang->kevinuser->lockedShort     = "临时";
 
 $lang->kevinuser->create       = '添加用户';
 $lang->kevinuser->edit         = "编辑用户";
