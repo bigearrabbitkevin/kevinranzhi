@@ -53,9 +53,9 @@ class kevinuser extends control {
 		
 		/* Build the search form. */
 		$queryID															 = $type == 'bydept' ? 0 : (int) $param;
-		$this->config->company->browse->search['actionURL']					 = $this->createLink('kevinuser', 'browse', "param=myQueryID&type=bysearch");
-		$this->config->company->browse->search['queryID']					 = $queryID;
-		$this->config->company->browse->search['params']['dept']['values']	 = array('' => '') + $this->kevindept->getOptionMenu();
+		$this->config->kevinuser->browse->search['actionURL']					 = $this->createLink('kevinuser', 'browse', "param=myQueryID&type=bysearch");
+		$this->config->kevinuser->browse->search['queryID']					 = $queryID;
+		$this->config->kevinuser->browse->search['params']['dept']['values']	 = array('' => '') + $this->kevindept->getOptionMenu();
 		
 		if ($type == 'bydept') {
 			$childDeptIds	 = $this->kevindept->getAllChildID($deptID);
@@ -70,14 +70,15 @@ class kevinuser extends control {
 					$this->session->set('userQuery', ' 1 = 1');
 				}
 			}
-			$users = $this->loadModel('user')->getByQuery($this->session->userQuery, $pager, $sort);
+			$users = $this->loadModel('kevinuser')->getByQuery($this->session->userQuery, $pager, $sort);
 		}
 		$this->view->title		= $this->lang->kevinuser->common . $this->lang->colon . $this->lang->kevindept->common;
 		
 		$this->view->position[]	 = $this->lang->kevindept->common;
 		$this->view->users		 = $users;
-		$this->view->searchForm	 = $this->fetch('search', 'buildForm', $this->config->company->browse->search);
-		$this->view->deptTree	 = $this->kevindept->getTreeMenu($rooteDeptID = 0, array('kevinuserModel', 'createMemberLinkOfBrowse'));
+		$this->view->searchForm	 = $this->fetch('search', 'buildForm', $this->config->kevinuser->browse->search,$this->createLink('search', 'buildQuery'));
+		$this->view->deptTree    = $this->loadModel('tree')->getTreeMenu('dept', 0, array('kevinuserModel', 'createMemberLinkOfBrowse'));
+
 		$this->view->parentDepts = $this->kevindept->getParents($deptID);
 		$this->view->depts		 = $this->kevinuser->getDeptArray();
 		$this->view->orderBy	 = $orderBy;
@@ -98,16 +99,16 @@ class kevinuser extends control {
 	 */
 	public function batchCreate($deptID = 0)
 	{
-		$this->loadModel('dept');
+		$this->loadModel('kevindept');
 		$groups    = $this->dao->select('*')->from(TABLE_GROUP)->fetchAll();
 		$groupList = array('' => '');
 		$roleGroup = array();
+		foreach($groups as $group)
+		{
+			$groupList[$group->id] = $group->name;
+			if($group->role) $roleGroup[$group->role] = $group->id;
+		}
 
-
-//		$this->lang->set('menugroup.user', 'company');
-//		$this->lang->user->menu      = $this->lang->company->menu;
-//		$this->lang->user->menuOrder = $this->lang->company->menuOrder;
-//
 		if(!empty($_POST))
 		{
 			$this->kevinuser->batchCreate();
@@ -140,6 +141,7 @@ class kevinuser extends control {
 	 */
 	public function create($deptID = 0)
 	{
+		$this->loadModel('kevindept');
 		if(!empty($_POST))
 		{
 			$this->kevinuser->create();
@@ -148,6 +150,12 @@ class kevinuser extends control {
 		}
 		$groups    = $this->dao->select('*')->from(TABLE_GROUP)->fetchAll();
 		$groupList = array('' => '');
+		$roleGroup = array();
+		foreach($groups as $group)
+		{
+			$groupList[$group->id] = $group->name;
+			if($group->role) $roleGroup[$group->role] = $group->id;
+		}
 
 		$title      = $this->lang->kevinuser->common . $this->lang->colon . $this->lang->kevinuser->create;
 		$position[] = $this->lang->kevinuser->create;
@@ -155,6 +163,7 @@ class kevinuser extends control {
 		$this->view->position  = $position;
 		$this->view->depts     = $this->kevindept->getOptionMenu();
 		$this->view->groupList = $groupList;
+		$this->view->roleGroup = $roleGroup;
 		$this->view->deptID    = $deptID;
 		
 		$this->display();
@@ -167,14 +176,20 @@ class kevinuser extends control {
 	 * @access public
 	 * @return void
 	 */
-	public function deletedeptuser($id) {
-		$id = (int) $id;
+	public function deletedeptuser($id, $confirm = 'no') {
+		if ($confirm == 'no') {
+			die(js::confirm($this->lang->kevinuser->confirmDelete, inlink('deletedeptuser', "id=$id&confirm=yes")). js::reload('parent'));
+		} else {
 		$this->dao->delete()->from(TABLE_KEVIN_DEPTSET)
 				->where('id')->eq($id)
 				->exec();
-		die(js::reload('parent'));
+			if (dao::isError()) {
+				$this->send(array('result' => 'fail', 'message' => dao::getError()));
+			}
+			die(js::reload('parent'));
+		}
 	}
-	
+
 	/**
 	 * Batch delete dept.
 	 *
@@ -205,7 +220,7 @@ class kevinuser extends control {
 	 * @return void
 	 */
 	public function deptbatchedit() {
-		$deptModel = $this->loadModel('dept');
+		$deptModel = $this->loadModel('kevindept');
 		if ($this->post->parent) {
 			$allChanges = $this->kevinuser->deptBatchUpdate();
 			if (!empty($allChanges)) {
@@ -219,7 +234,7 @@ class kevinuser extends control {
 			die(js::alert($this->lang->kevinuser->successBatchEdit) . js::locate($this->createLink('kevinuser', 'deptlist'), 'parent'));
 		}
 
-		$users = $this->loadModel('user')->getPairs('noletter|noclosed');
+		$users = $this->loadModel('kevinuser')->getPairs('noletter|noclosed');
 
 		$deptIDList	 = $this->post->deptIDList ? $this->post->deptIDList : die(js::locate($this->createLink('kevinuser', 'deptlist'), 'parent'));
 		if (count($deptIDList) > $this->config->kevinuser->batchEditNum) {
@@ -230,7 +245,7 @@ class kevinuser extends control {
 		$this->view->showFields		 = $this->config->kevinuser->deptBatchEditFields;
 		$this->view->optionMenu		 = $deptModel->getOptionMenu();
 		$this->view->users			 = $users;
-		$this->view->groups		 = $this->loadModel('group')->getPairs();
+		$this->view->groups		     = $this->loadModel('group')->getPairs();
 		$this->view->title			 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->deptBatchEdit;
 		$this->view->position[]		 = $this->lang->kevinuser->deptBatchEdit;
 		$this->view->deptIDList		 = $deptIDList;
@@ -246,7 +261,7 @@ class kevinuser extends control {
 	 * @return void
 	 */
 	public function deptcreate($id = '') {
-		$deptModel = $this->loadModel('dept');
+		$deptModel = $this->loadModel('kevindept');
 		if (!empty($_POST)) {
 			$deptID = $this->kevinuser->deptCreate();
 			if (dao::isError()) die(js::error(dao::getError()));
@@ -255,7 +270,7 @@ class kevinuser extends control {
 		}
 		
 		if(!empty($id))	$this->view->dept		 = $deptModel->getById($id);
-		$users					 = $this->loadModel('user')->getPairs('noletter|noclosed');
+		$users					 = $this->loadModel('kevinuser')->getPairs('noletter|noclosed');
 		$this->view->optionMenu	 = $deptModel->getOptionMenu();
 
 		$this->view->users		 = $users;
@@ -276,7 +291,7 @@ class kevinuser extends control {
 	 */
 	public function deptdelete($id, $confirm = 'no') {
 		if ($confirm == 'no') {
-			die(js::confirm($this->lang->kevinuser->confirmDelete, inlink('deptdelete', "id=$id&confirm=yes")));
+			die(js::confirm($this->lang->kevinuser->confirmDelete, inlink('deptdelete', "id=$id&confirm=yes"),inLink('deptlist')));
 		} else {
 			$data = $this->dao->select('deleted')->from(TABLE_DEPT)->where('id')->eq($id)->fetch();
 			if ($data->deleted) {
@@ -297,7 +312,7 @@ class kevinuser extends control {
 	 * @return void
 	 */
 	public function deptedit($deptID) {
-		$deptModel = $this->loadModel('dept');
+		$deptModel = $this->loadModel('kevindept');
 		if (!empty($_POST)) {
 			$allChanges = $this->kevinuser->deptUpdate($deptID);
 			if (!empty($allChanges)) {
@@ -311,7 +326,7 @@ class kevinuser extends control {
 			die(js::alert($this->lang->kevinuser->successSave) . js::locate($this->createLink('kevinuser', 'deptlist'), 'parent.parent'));
 		}
 		$dept					 = $deptModel->getById($deptID);
-		$users					 = $this->loadModel('user')->getPairs('noletter|noclosed');
+		$users					 = $this->loadModel('kevinuser')->getPairs('noletter|noclosed');
 		$this->view->optionMenu	 = $deptModel->getOptionMenu();
 		$this->view->dept		 = $dept;
 		$this->view->users		 = $users;
@@ -476,11 +491,11 @@ class kevinuser extends control {
 	 */
 	public function deptview($id) {
 		$dept					 = $this->kevinuser->getDept($id);
-		$this->view->optionMenu	 = $this->loadModel('dept')->getOptionMenu();
+		$this->view->optionMenu	 = $this->loadModel('kevindept')->getOptionMenu();
 		$this->view->title		 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->deptview;
 		$this->view->position[]	 = $this->lang->kevinuser->manage;
 		$this->view->actions	 = $this->loadModel('action')->getList('kevinuserdept', $id);
-		$this->view->accounts	 = $this->loadModel('user')->getPairs();
+		$this->view->accounts	 = $this->loadModel('kevinuser')->getPairs();
 		$this->view->groups		 = $this->loadModel('group')->getPairs();
 		$this->view->dept		 = $dept;
 		$this->display();
@@ -496,7 +511,7 @@ class kevinuser extends control {
 	public function edit($userID)
 	{
 		
-		$this->loadModel('dept');
+		$this->loadModel('kevindept');
 //		$this->lang->set('menugroup.user', 'company');
 //		$this->lang->user->menu      = $this->lang->company->menu;
 //		$this->lang->user->menuOrder = $this->lang->company->menuOrder;
@@ -530,44 +545,44 @@ class kevinuser extends control {
 	 * @return void
 	 */
 	public function manageContacts($listID = 0) {
-		$this->loadModel('user');
-		$lists = $this->user->getContactLists($this->app->user->account);
+		$this->loadModel('kevinuser');
+		$lists = $this->kevinuser->getContactLists($this->app->user->account);
 		
 		/* If set $mode, need to update database. */
 		if ($this->post->mode) {
 			/* The mode is new: append or new a list. */
 			if ($this->post->mode == 'new') {
 				if ($this->post->list2Append) {
-					$this->user->append2ContactList($this->post->list2Append, $this->post->users);
+					$this->kevinuser->append2ContactList($this->post->list2Append, $this->post->users);
 					die(js::locate(inlink('manageContacts', "listID={$this->post->list2Append}"), 'parent'));
 				} elseif ($this->post->newList) {
-					$listID = $this->user->createContactList($this->post->newList, $this->post->users);
+					$listID = $this->kevinuser->createContactList($this->post->newList, $this->post->users);
 					die(js::locate(inlink('manageContacts', "listID=$listID"), 'parent'));
 				}
 			} elseif ($this->post->mode == 'edit') {
-				$this->user->updateContactList($this->post->listID, $this->post->listName, $this->post->users);
+				$this->kevinuser->updateContactList($this->post->listID, $this->post->listName, $this->post->users);
 				die(js::locate(inlink('manageContacts', "listID={$this->post->listID}"), 'parent'));
 			}
 		}
 		if ($this->post->users) {
 			$mode	 = 'new';
-			$users	 = $this->user->getContactUserPairs($this->post->users);
+			$users	 = $this->kevinuser->getContactUserPairs($this->post->users);
 		} else {
 			$mode	 = 'edit';
 			$listID	 = $listID ? $listID : key($lists);
 			if (!$listID)
 				die(js::alert($this->lang->user->contacts->noListYet) . js::locate($this->createLink('kevinuser', 'browse'), 'parent'));
 			
-			$list				 = $this->user->getContactListByID($listID);
+			$list				 = $this->kevinuser->getContactListByID($listID);
 			$users				 = explode(',', $list->userList);
-			$users				 = $this->user->getContactUserPairs($users);
+			$users				 = $this->kevinuser->getContactUserPairs($users);
 			$this->view->list	 = $list;
 		}
 		
-		$this->view->title		 = $this->lang->company->common . $this->lang->colon . $this->lang->kevinuser->manageContacts;
-		$this->view->position[]	 = $this->lang->company->common;
+		$this->view->title		 = $this->lang->kevinuser->common . $this->lang->colon . $this->lang->kevinuser->manageContacts;
+		$this->view->position[]	 = $this->lang->kevinuser->common;
 		$this->view->position[]	 = $this->lang->kevinuser->manageContacts;
-		$this->view->lists		 = $this->user->getContactLists($this->app->user->account);
+		$this->view->lists		 = $this->kevinuser->getContactLists($this->app->user->account);
 		$this->view->users		 = $users;
 		$this->view->listID		 = $listID;
 		$this->view->mode		 = $mode;
@@ -661,7 +676,7 @@ class kevinuser extends control {
 				->on('a.class=b.id')->where('a.id')->in($recordIDList)->fetchAll('id');
 
 		$this->view->showFields		 = $this->config->kevinuser->recordBatchEditFields;
-		$this->view->accounts		 = $this->loadModel('user')->getPairs();
+		$this->view->accounts		 = $this->loadModel('kevinuser')->getPairs();
 		$this->view->classpairs		 = $this->kevinuser->getAllClassPairs();
 		$this->view->title			 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->recordBatchEdit;
 		$this->view->position[]		 = $this->lang->kevinuser->recordBatchEdit;
@@ -690,7 +705,7 @@ class kevinuser extends control {
 			$record	 = $this->kevinuser->getRecord($id);
 			$this->view->record	= $record;
 		}
-		$this->view->accounts	 = $this->loadModel('user')->getPairs();
+		$this->view->accounts	 = $this->loadModel('kevinuser')->getPairs();
 		$this->view->classpairs	 = $this->kevinuser->getAllClassPairs();
 		$this->view->title		 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->recordcreate;
 		$this->view->position[]	 = $this->lang->kevinuser->manage;
@@ -747,7 +762,7 @@ class kevinuser extends control {
 			die(js::alert($this->lang->kevinuser->successSave) . js::locate($this->createLink('kevinuser', 'recordlist'), 'parent.parent'));
 		}
 		$record					 = $this->kevinuser->getRecord($id);
-		$this->view->accounts	 = $this->loadModel('user')->getPairs();
+		$this->view->accounts	 = $this->loadModel('kevinuser')->getPairs();
 		$this->view->classpairs	 = $this->kevinuser->getAllClassPairs();
 		$this->view->title		 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->recordedit;
 		$this->view->position[]	 = $this->lang->kevinuser->manage;
@@ -846,7 +861,7 @@ class kevinuser extends control {
 		$this->view->title		 = $this->lang->kevinuser->manage . $this->lang->colon . $this->lang->kevinuser->recordview;
 		$this->view->position[]	 = $this->lang->kevinuser->manage;
 		$this->view->record		 = $record;
-		$this->view->accounts	 = $this->loadModel('user')->getPairs();
+		$this->view->accounts	 = $this->loadModel('kevinuser')->getPairs();
 		$this->view->actions	 = $this->loadModel('action')->getList('kevinuserrecord', $id);
 		$this->display();
 	}
@@ -859,14 +874,14 @@ class kevinuser extends control {
 				$this->kevinuser->userbatchedit();
 			die(js::locate($this->createLink('kevinuser', 'browse', "deptID=$deptID"), 'parent'));
 		}
-		$this->lang->set('menugroup.user', 'company');
-		$this->lang->user->menu		 = $this->lang->company->menu;
-		$this->lang->user->menuOrder = $this->lang->company->menuOrder;
+		$this->lang->set('menugroup.user', 'kevinuser');
+		$this->lang->user->menu		 = $this->lang->kevinuser->menu;
+		$this->lang->user->menuOrder = $this->lang->kevinuser->menuOrder;
 		
-		$this->view->title		 = $this->lang->company->common . $this->lang->colon . $this->lang->kevinuser->userbatchedit;
+		$this->view->title		 = $this->lang->kevinuser->common . $this->lang->colon . $this->lang->kevinuser->userbatchedit;
 		$this->view->position[]	 = $this->lang->kevinuser->browse;
 		$this->view->position[]	 = $this->lang->kevinuser->userbatchedit;
-		$this->view->depts		 = $this->loadModel('dept')->getOptionMenu();
+		$this->view->depts		 = $this->loadModel('kevindept')->getOptionMenu();
 		$this->display();
 	}
 
@@ -880,23 +895,30 @@ class kevinuser extends control {
 	 */
 	public function unlock($account, $confirm = 'no') {
 		if ($confirm == 'no') {
-			die(js::confirm($this->lang->kevinuser->confirmUnlock, $this->createLink('kevinuser', 'unlock', "account=$account&confirm=yes")));
+			die(js::confirm($this->lang->kevinuser->confirmUnlock, inlink('unlock', "account=$account&confirm=yes")). js::reload('parent'));
 		} else {
-			$this->loadModel('user')->cleanLocked($account);
-			die(js::locate($this->createLink('kevinhours', 'browse'), 'parent'));
+			$this->loadModel('kevinuser')->cleanLocked($account);
+			if (dao::isError()) {
+				$this->send(array('result' => 'fail', 'message' => dao::getError()));
 		}
+			die(js::reload('parent'));
+	}
 	}
 
+
 	public function userLock($account, $confirm = 'no') {
-		if (strpos($this->app->company->admins, ",$account,") === false) {
+		if (strpos($this->app->kevinuser->admins, ",$account,") === false) {
 			if ($confirm == 'no') {
-				die(js::confirm($this->lang->kevinuser->confirmLock, $this->createLink('kevinuser', 'userLock', "account=$account&confirm=yes")));
+				die(js::confirm($this->lang->kevinuser->confirmLock, inlink('userLock', "account=$account&confirm=yes")). js::reload('parent'));
 			} else {
 				$this->kevinuser->lockUser($account);
-				die(js::reload('parent.parent'));
+				if (dao::isError()) {
+					$this->send(array('result' => 'fail', 'message' => dao::getError()));
+				}
+				die(js::reload('parent'));
 			}
 		} else {
-			die(js::locate($this->createLink('kevinhours', 'browse'), 'parent'));
+			die(js::reload('parent'));
 		}
 	}
 

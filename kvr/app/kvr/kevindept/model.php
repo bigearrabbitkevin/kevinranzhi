@@ -199,7 +199,7 @@ class kevindeptModel extends model
      */
     public function createMemberLink($kevindept)
     {
-        $linkHtml = html::a(helper::createLink('company', 'browse', "kevindept={$kevindept->id}"), $kevindept->name, '_self', "id='kevindept{$kevindept->id}'");
+        $linkHtml = html::a(helper::createLink('kevindept', 'browse', "kevindept={$kevindept->id}"), $kevindept->name, '_self', "id='kevindept{$kevindept->id}'");
         return $linkHtml;
     }
 
@@ -328,7 +328,7 @@ class kevindeptModel extends model
     {
         return $this->dao->select('*')->from(TABLE_USER)
             ->where('deleted')->eq(0)
-            ->beginIF($deptID)->andWhere('kevindept')->in($deptID)->fi()
+            ->beginIF($deptID)->andWhere('dept')->in($deptID)->fi()
             ->orderBy($orderBy)
             ->page($pager)
             ->fetchAll();

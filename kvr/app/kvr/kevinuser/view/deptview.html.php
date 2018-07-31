@@ -10,7 +10,7 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
+<?php include '../../common/view/header.modal.html.php';?>
 <?php include '../../common/view/datepicker.html.php';?>
 <style>
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
@@ -18,13 +18,7 @@
         background-color: #fff;
     }
 </style>
-<div class='container mw-700px'>
-    <div id='titlebar'>
-        <div class='heading'>
-            <span class='prefix'><?php echo html::icon($lang->icons['user']);?></span>
-            <strong><small class='text-muted'><?php echo html::icon($lang->icons['create']);?></small> <?php echo $title;?></strong>
-        </div>
-    </div>
+<div class='container mw-700px' style="border: none;">
     <div class="main">
         <fieldset>
             <legend>

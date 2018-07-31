@@ -11,29 +11,29 @@
  */
 ?>
 <?php include '../../common/view/header.html.php'; ?>
-<?php include '../../common/view/datepicker.html.php'; ?>
+<?php include '../../../sys/common/view/datepicker.html.php'; ?>
 <div id='titlebar'>
 	<div class='heading'>
 		<span class='prefix'><?php echo html::icon($lang->icons['user']); ?></span>
-		<strong><small class='text-muted'><?php echo html::icon($lang->icons['batchEdit']); ?></small> <?php echo $lang->user->batchEdit; ?></strong>
+		<strong><small class='text-muted'><?php echo html::icon($lang->icons['batchEdit']); ?></small> <?php echo $lang->kevinuser->batchEdit; ?></strong>
 	</div>
 </div>
 
 <form class='form-condensed' method='post' target='hiddenwin' id='dataform'>
-	<table class='table table-form'>
+	<table class='table'>
 		<thead>
-			<tr>
-				<th class='w-30px'><?php echo $lang->idAB; ?></th> 
-				<th class='w-150px'><?php echo $lang->user->realname; ?></th>
-				<th class='w-150px'><?php echo $lang->user->dept; ?></th>
-				<th class='w-150px'><?php echo $lang->user->deptdispatch; ?></th>
-				<th class='w-150px'><?php echo $lang->user->account; ?></th>
-				<th class='w-150px'><?php echo $lang->user->code; ?></th>
-				<th><?php echo $lang->user->email; ?></th>
-			</tr>
+		<tr>
+			<th class='w-30px'>ID</th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->realname; ?></th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->dept; ?></th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->deptdispatch; ?></th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->account; ?></th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->code; ?></th>
+			<th class='text-center w-auto'><?php echo $lang->kevinuser->email; ?></th>
+		</tr>
 		</thead>
-		<?php $depts					 = $depts + array('ditto' => $lang->user->ditto) ?>
-		<?php $lang->user->roleList	 = $lang->user->roleList + array('ditto' => $lang->user->ditto) ?>
+		<?php $depts					 = $depts + array('ditto' => $lang->kevinuser->ditto) ?>
+		<?php $lang->kevinuser->roleList	 = $lang->kevinuser->roleList + array('ditto' => $lang->kevinuser->ditto) ?>
 		<?php $first					 = true; ?>
 		<?php foreach ($users as $user): ?>
 			<?php

@@ -72,10 +72,10 @@
 					<td class='text-center'><input name="deptIDList[]" value="<?php echo $item->id;?>" type="checkbox"> <?php printf('%03d', $item->id);?></td>
 					<td class='text-center'>
 						<?php
-						if (commonModel::hasPriv('kevinuser', 'deptview')) echo html::a($this->createLink('kevinuser', 'deptview', "id=$item->id"), "<i class='icon-search'></i>","data-toggle='modal'");
-						if (commonModel::hasPriv('kevinuser', 'deptedit')) echo html::a($this->createLink('kevinuser', 'deptedit', "id=$item->id"), "<i class='icon-pencil'></i>","data-toggle='modal'");
-						if (commonModel::hasPriv('kevinuser', 'deptdelete')) echo html::a($this->createLink('kevinuser', 'deptdelete', "id=$item->id"), "<i class='icon-remove'></i>", "data-toggle='modal'");
-						if (commonModel::hasPriv('kevinuser', 'deptcreate')) echo html::a($this->createLink('kevinuser', 'deptcreate', "id=$item->id"), "<i class='icon-copy'></i>","data-toggle='modal' data-icon='copy'");
+						if (commonModel::hasPriv('kevinuser', 'deptview')) echo html::a($this->createLink('kevinuser', 'deptview', "id=$item->id", '', true), "<i class='icon-search'></i>","data-toggle='modal' data-type='iframe' data-icon='search'");
+						if (commonModel::hasPriv('kevinuser', 'deptedit')) echo html::a($this->createLink('kevinuser', 'deptedit', "id=$item->id", '', true), "<i class='icon-pencil'></i>","data-toggle='modal' data-type='iframe' data-icon='pencil'");
+						if (commonModel::hasPriv('kevinuser', 'deptdelete')) echo html::a($this->createLink('kevinuser', 'deptdelete', "id=$item->id", '', true), "<i class='icon-remove'></i>", "target='hiddenwin ' data-toggle='modal'");
+						if (commonModel::hasPriv('kevinuser', 'deptcreate')) echo html::a($this->createLink('kevinuser', 'deptcreate', "id=$item->id", '', true), "<i class='icon-copy'></i>","data-toggle='modal' data-type='iframe' data-icon='copy'");
 						?>
 					</td>
 					<td class='text-center'><?php echo html::a($this->createLink('kevinuser', 'deptlist', 'path=' . $item->id), $item->name);?></td>

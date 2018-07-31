@@ -31,14 +31,14 @@ $minWidth = (count($visibleFields) > 5) ? 'w-150px' : '';
 	<table class='table table-form'>
 		<thead>
 			<tr class='text-center'>
-				<th class='w-auto'><?php echo $lang->kevinuser->id;?></th>
-				<th class='w-auto'><?php echo $lang->kevinuser->deptParent;?> <span class='required'></span></th>
-				<th class='w-auto'><?php echo $lang->kevinuser->deptName;?> <span class='required'></span></th>
-				<th class='w-auto' style="min-width:100px;"><?php echo $lang->kevinuser->manager;?> </th>
-				<th class='w-auto'><?php echo $lang->kevinuser->deptgroup;?> </th>
-				<th class='w-auto'><?php echo $lang->kevinuser->email;?> </th>
-				<th class='w-auto'><?php echo $lang->kevinuser->code;?> </th>
-				<th class='w-auto'><?php echo $lang->kevinuser->order;?> <span class='required'></span></th>
+				<th class='w-p5'><?php echo $lang->kevinuser->id;?></th>
+				<th class='w-p20'><?php echo $lang->kevinuser->deptParent;?> <span class='required'></span></th>
+				<th class='w-p15'><?php echo $lang->kevinuser->deptName;?> <span class='required'></span></th>
+				<th class='w-p10' style="min-width:100px;"><?php echo $lang->kevinuser->manager;?> </th>
+				<th class='w-p20'><?php echo $lang->kevinuser->deptgroup;?> </th>
+				<th class='w-p10'><?php echo $lang->kevinuser->email;?> </th>
+				<th class='w-p10'><?php echo $lang->kevinuser->code;?> </th>
+				<th class='w-p10'><?php echo $lang->kevinuser->order;?> <span class='required'></span></th>
 			</tr>
 		</thead>
 		<?php foreach ($deptIDList as $deptID):?>

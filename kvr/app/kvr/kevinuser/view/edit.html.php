@@ -10,9 +10,8 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
-<?php include '../../../sys/common/view/chosen.html.php';?>
-<?php include '../../common/view/datepicker.html.php';?>
+<?php include '../../common/view/header.modal.html.php';?>
+<?php include '../../../sys/common/view/datepicker.html.php';?>
 <div class='container mw-800px'>
   <div id='titlebar'>
     <div class='heading'>
@@ -21,7 +20,7 @@
       <small class='text-muted'> <?php echo $lang->kevinuser->edit;?> <?php echo html::icon($lang->icons['edit']);?></small>
     </div>
   </div>
-  <form class='form-condensed' method='post' target='hiddenwin' id='dataform'>
+  <form class='form-condensed' method='post' target='hiddenwin' id='userform'>
     <table align='center' class='table table-form'>
       <caption class='text-left text-muted'><?php echo $lang->kevinuser->basicInfo;?></caption>
       <tr>
@@ -114,9 +113,16 @@
           <?php echo html::password('verifyPassword', '', "class='form-control disabled-ie-placeholder' autocomplete='off' placeholder='{$lang->kevinuser->placeholder->verify}'");?>
         </td>
       </tr>
-      <tr><td colspan='2' class='text-center'><?php echo html::submitButton() . html::backButton();?></td></tr>
+      <tr><td colspan='2' class='text-center'><?php echo html::submitButton($lang->save, 'btn btn-default', 'onclick=editUser()') . html::backButton();?></td></tr>
     </table>
   </form>
 </div>
+<script lanugage='javascript'>
+
+	function editUser() {
+		var userID = "<?php echo $user->id;?>";
+		$('#userform').attr('action', createLink('kevinuser', 'edit', 'userID=' + userID));
+	}
+</script>
 <?php js::set('passwordStrengthList', $lang->kevinuser->passwordStrengthList)?>
-<?php include '../../common/view/footer.html.php';?>
+<?php include '../../../sys/common/view/footer.modal.html.php';?>

@@ -10,18 +10,18 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../kevinuser/view/header.html.php';?>
+<?php include '../../common/view/header.html.php';?>
 <div id='titlebar'>
   <div class='heading'>
     <span class='prefix' title='COMPANY'><?php echo html::icon($lang->icons['company']);?></span>
-    <strong><small class='text-muted'><?php echo html::icon('cogs');?></small> <?php echo $lang->user->contacts->manage;?></strong>
+    <strong><small class='text-muted'><?php echo html::icon('cogs');?></small> <?php echo $lang->kevinuser->contacts->manage;?></strong>
   </div>
 </div>
 <div class='row'>
   <div class='col-md-3 col-lg-2'>
     <div class='panel panel-sm with-list'>
       <div class='panel-heading'>
-        <i class='icon-list-ul'></i> <strong><?php echo $lang->user->contacts->contactsList;?></strong>
+        <i class='icon-list-ul'></i> <strong><?php echo $lang->kevinuser->contacts->contactsList;?></strong>
       </div>
       <ul class='list-group'>
         <?php 
@@ -34,15 +34,15 @@
     <form class='form-condensed' method='post' target='hiddenwin' id='dataform'>
       <div class='panel panel-sm'>
         <div class='panel-heading'>
-          <i class='icon-cogs'></i> <strong><?php echo $lang->user->contacts->manage;?></strong>
-          <div class='panel-actions pull-right'>
-            <?php if($mode == 'edit') echo html::a(inlink('deleteContacts', "listID=$listID"), $lang->delete, 'hiddenwin', "class='btn btn-danger'");?>
-          </div>
+          <i class='icon-cogs'></i> <strong><?php echo $lang->kevinuser->contacts->manage;?></strong>
+<!--          <div class='panel-actions pull-right'>-->
+<!--            --><?php //if($mode == 'edit') echo html::a(inlink('deleteContacts', "listID=$listID"), $lang->delete, "class='btn btn-danger' target='hiddenwin'");?>
+<!--          </div>-->
         </div>
         <div class='panel-body'>
           <table class='table table-form table-fixed'> 
             <tr>
-              <th class='w-80px'><?php echo $lang->user->contacts->selectedUsers;?></th>
+              <th class='w-80px'><?php echo $lang->kevinuser->contacts->selectedUsers;?></th>
               <td>
                 <?php
                 foreach($this->view->users as $account => $realname)
@@ -53,7 +53,7 @@
               </td>
             </tr>
             <tr>
-              <th><?php $mode == 'new' ? print($lang->user->contacts->selectList) : print($lang->user->contacts->listName);?></th>
+              <th><?php $mode == 'new' ? print($lang->kevinuser->contacts->selectList) : print($lang->kevinuser->contacts->listName);?></th>
               <td>
                 <?php 
                 if($mode == 'new')
@@ -61,12 +61,12 @@
                     echo "<div class='input-group clearfix mw-700px'>";
                     if($lists)
                     {
-                        echo "<span class='input-group-addon'>" . $lang->user->contacts->appendToList . '</span>';
+                        echo "<span class='input-group-addon'>" . $lang->kevinuser->contacts->appendToList . '</span>';
                         echo html::select('list2Append', array('' => '') + $lists, '', "class='form-control'");
                     }
                     echo "<span class='input-group-addon'>";
-                    if($lists) echo $lang->user->contacts->or;
-                    echo $lang->user->contacts->createList;
+                    if($lists) echo $lang->kevinuser->contacts->or;
+                    echo $lang->kevinuser->contacts->createList;
                     echo '</span>';
                     echo html::input('newList', '', "class='form-control'");
                     echo '</div>';

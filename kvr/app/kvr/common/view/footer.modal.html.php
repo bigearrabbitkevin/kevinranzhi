@@ -10,6 +10,4 @@
  * @link        http://www.ranzhi.org
  */
 if($extView = $this->getExtViewFile(__FILE__)){include $extView; return helper::cd();}
-include $this->app->getBasePath() . 'app/sys/common/view/header.html.php';
-include $this->app->getBasePath() . 'app/sys/common/view/chosen.html.php';
-include $this->app->getBasePath() . 'app/sys/common/view/datepicker.html.php';
+include $this->app->getBasePath() . 'app/sys/common/view/footer.modal.html.php';

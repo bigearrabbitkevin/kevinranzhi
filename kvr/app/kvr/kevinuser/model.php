@@ -24,12 +24,12 @@ class kevinuserModel extends model {
 	 */
 	public function batchCreate()
 	{
-		if(empty($_POST['verifyPassword']) or md5($this->post->verifyPassword) != $this->app->user->password) die(js::alert($this->lang->user->error->verifyPassword));
+		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->app->user->account) != $this->app->user->password) die(js::alert($this->lang->user->error->verifyPassword));
 		
 		$users    = fixer::input('post')->get();
 		$data     = array();
 		$accounts = array();
-		for($i = 0; $i < $this->config->user->batchCreate; $i++)
+		for($i = 0; $i < $this->config->kevinuser->batchCreate; $i++)
 		{
 			if($users->account[$i] != '')
 			{
@@ -53,7 +53,7 @@ class kevinuserModel extends model {
 				$data[$i]->gender   = $users->gender[$i];
 				$data[$i]->password = md5($users->password[$i]);
 				$data[$i]->commiter = $users->commiter[$i];
-				$data[$i]->join     = empty($users->join[$i]) ? '0000-00-00' : ($user->join[$i]);
+				$data[$i]->join     = empty($users->join[$i]) ? '0000-00-00' : ($users->join[$i]);
 				$data[$i]->skype    = $users->skype[$i];
 				$data[$i]->qq       = $users->qq[$i];
 				$data[$i]->yahoo    = $users->yahoo[$i];
@@ -156,7 +156,7 @@ class kevinuserModel extends model {
 			return false;
 		}
 		
-		if(empty($_POST['verifyPassword']) or md5($this->post->verifyPassword) != $this->app->user->password)
+		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->app->user->account) != $this->app->user->password)
 		{
 			dao::$errors['verifyPassword'][] = $this->lang->user->error->verifyPassword;
 			return false;
@@ -277,7 +277,7 @@ class kevinuserModel extends model {
 		$allChanges	 = array();
 		$data		 = fixer::input('post')->get();
 		$oldDepts	 = $this->getDeptByIdList($this->post->deptIDList);
-		$deptModel	 = $this->loadModel('dept');
+		$deptModel	 = $this->loadModel('kevindept');
 		foreach ($data->deptIDList as $deptID) {
 			$parent			 = $deptModel->getById($data->parent[$deptID]);
 			$depts[$deptID]	 = new stdClass();
@@ -323,7 +323,7 @@ class kevinuserModel extends model {
 	 */
 	public function deptCreate() {
 		$postData		 = fixer::input('post')->get();
-		$deptModel		 = $this->loadModel('dept');
+		$deptModel		 = $this->loadModel('kevindept');
 		$parent			 = $deptModel->getById($this->post->parent);
 		$dept			 = new stdClass();
 		$dept->parent	 = $postData->parent;
@@ -462,6 +462,119 @@ class kevinuserModel extends model {
 		$user->last = date(DT_DATETIME1, $user->last);
 		return $user;
 	}
+
+	/**
+	 * Get users by sql.
+	 *
+	 * @param  int    $query
+	 * @param  int    $pager
+	 * @access public
+	 * @return void
+	 */
+	public function getByQuery($query, $pager = null, $orderBy = 'id')
+	{
+		return $this->dao->select('*')->from(TABLE_USER)
+			->where($query)
+			->andWhere('deleted')->eq(0)
+			->orderBy($orderBy)
+			->page($pager)
+			->fetchAll();
+	}
+
+
+	/**
+	 * Get contact list of a user.
+	 *
+	 * @param  string    $account
+	 * @param  string    $params   withempty|withnote
+	 * @access public
+	 * @return object
+	 */
+	public function getContactLists($account, $params= '')
+	{
+		$contacts = $this->dao->select('id, listName')->from(TABLE_USERCONTACT)->where('account')->eq($account)->fetchPairs();
+		if(!$contacts) return array();
+
+		if(strpos($params, 'withempty') !== false) $contacts = array('' => '') + $contacts;
+		if(strpos($params, 'withnote')  !== false) $contacts = array('' => $this->lang->user->contacts->common) + $contacts;
+
+		return $contacts;
+	}
+
+	/**
+	 * Get a contact list by id.
+	 *
+	 * @param  int    $listID
+	 * @access public
+	 * @return object
+	 */
+	public function getContactListByID($listID)
+	{
+		return $this->dao->select('*')->from(TABLE_USERCONTACT)->where('id')->eq($listID)->fetch();
+	}
+
+	/**
+	 * Get user account and realname pairs from a contact list.
+	 *
+	 * @param  string    $accountList
+	 * @access public
+	 * @return array
+	 */
+	public function getContactUserPairs($accountList)
+	{
+		return $this->dao->select('account, realname')->from(TABLE_USER)->where('account')->in($accountList)->fetchPairs();
+	}
+
+
+	/**
+	 * Create a contact list.
+	 *
+	 * @param  string    $listName
+	 * @param  string    $userList
+	 * @access public
+	 * @return int
+	 */
+	public function createContactList($listName, $userList)
+	{
+		$data = new stdclass();
+		$data->listName = $listName;
+		$data->userList = join(',', $userList);
+		$data->account  = $this->app->user->account;
+
+		$this->dao->insert(TABLE_USERCONTACT)->data($data)->exec();
+		return $this->dao->lastInsertID();
+	}
+
+	/**
+	 * Update a contact list.
+	 *
+	 * @param  int    $listID
+	 * @param  string $listName
+	 * @param  string $userList
+	 * @access public
+	 * @return void
+	 */
+	public function updateContactList($listID, $listName, $userList)
+	{
+		$data = new stdclass();
+		$data->listName = $listName;
+		$data->userList = join(',', $userList);
+
+		$this->dao->update(TABLE_USERCONTACT)->data($data)->where('id')->eq($listID)->exec();
+	}
+
+	/**
+	 * Delete a contact list.
+	 *
+	 * @param  int    $listID
+	 * @access public
+	 * @return void
+	 */
+	public function deleteContactList($listID)
+	{
+		return $this->dao->delete()->from(TABLE_USERCONTACT)->where('id')->eq($listID)->exec();
+	}
+
 
 	/**
 	 * Get by id.
@@ -964,7 +1077,7 @@ class kevinuserModel extends model {
 			return false;
 		}
 		
-		if(empty($_POST['verifyPassword']) or md5($this->post->verifyPassword) != $this->app->user->password)
+		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->post->account) != $oldUser->password)
 		{
 			dao::$errors['verifyPassword'][] = $this->lang->kevinuser->error->verifyPassword;
 			return false;
@@ -1106,4 +1219,23 @@ class kevinuserModel extends model {
 		}
 	}
 	
+
+	public function lockUser($account) {
+		$this->dao->update(TABLE_USER)->set('fails')->eq(0)->set('locked')->eq('2030-01-01 00:00:00')
+			->where('account')->eq($account)
+			->exec();
+	}
+
+	/**
+	 * Unlock the locked user.
+	 *
+	 * @param  int    $account
+	 * @access public
+	 * @return void
+	 */
+	public function cleanLocked($account)
+	{
+		$this->dao->update(TABLE_USER)->set('fails')->eq(0)->set('locked')->eq('0000-00-00 00:00:00')->where('account')->eq($account)->exec();
+	}
+
 }

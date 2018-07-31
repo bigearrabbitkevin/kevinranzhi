@@ -11,6 +11,7 @@
  */
 ?>
 <?php include '../../../common/view/header.html.php';?>
+<?php include '../../../common/view/treeview.html.php';?>
 <?php 
 //kevin. 检出部门的用户
 $deptID     = $this->get->deptID;
@@ -28,7 +29,7 @@ if($deptID) {
   <div class='heading'>
     <span class='prefix' title='GROUP'>  <strong><?php echo $group->id;?></strong></span>
     <strong><?php echo $group->name;?></strong>
-    <small class='text-muted'> <?php echo $lang->group->manageMember;?>  ?></small>
+    <small class='text-muted'> <?php echo $lang->group->manageMember;?> </small>
 	<?php //显示部门的信息 .kevin
 	if($deptName)echo ' ('.$deptName.')';?>
   </div>
@@ -37,7 +38,9 @@ if($deptID) {
   <div class="col-side">
     <div class='side-body'>
       <div class='panel panel-sm' >
-        <div class='panel-heading nobr'> </div>
+        <div class='panel-heading nobr'>
+	        <?php echo $treemenu; ?>
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +52,8 @@ if($deptID) {
 		<!--Start: 区分组内和组外语句。 kevin.-->
           <th class='w-100px' ><?php echo $lang->group->inside;?><?php echo html::selectAll('group', 'checkbox', true);?> </th>
           <td id='group' class='form-control ' size='10' style='height:200px;overflow:auto;' ><?php $i = 1;?>
-			  <div class='w-200px' >
-				<strong><?php echo '('.$deptName.')人员';//echo '科室人员';?></strong><?php echo html::selectAll('indept', 'checkbox', true);?>
+			  <div class='w-80px' >
+				<strong><?php echo '部门内人员';//echo '科室人员';?></strong><?php echo html::selectAll('indept', 'checkbox', true);?>
 			  </div>
             <?php foreach($groupUsers as $account => $realname):	
 				if(!in_array($account, $deptusers))continue; //忽略不在组织内的
@@ -60,8 +63,8 @@ if($deptID) {
 		<!--end: 区分组内和组外语句。 kevin.--> 
 			<!--Start:添加非组内人员循环语句。 kevin.-->
 			<br>
-			  <div class='w-200px ' >
-				<strong><?php echo '非('.$deptName.')人员';//echo '非科室人员';?></strong><?php echo html::selectAll('extdept', 'checkbox', true);?>
+			  <div class='w-80px ' >
+				<strong><?php echo '部门外人员';//echo '非科室人员';?></strong><?php echo html::selectAll('extdept', 'checkbox', true);?>
 			  </div>
 			 <?php foreach($groupUsers as $account => $realname):
 				if(in_array($account, $deptusers))continue; //忽略在组织内的
@@ -74,8 +77,14 @@ if($deptID) {
         <?php endif;?>
         <tr>
           <th class='w-100px'><?php echo $lang->group->outside;?><?php echo html::selectAll('other','checkbox');?> </th>
-			<!--下面一句：添加高度限制语句 kevin.-->
-          <td id='other' class='form-control' size='10' style='height:200px;overflow:auto;'><?php $i = 1;?>
+          <td id='other' class='form-control' size='10' style='height:200px;overflow:auto;'>
+	          <div class='w-80px' ><strong><?php echo '部门内成员';//echo '科室人员';?></strong><?php echo html::selectAll('indept', 'checkbox', '');?></div>
+	          <?php foreach($groupNotInUsers as $account => $realname):?>
+		          <div class='group-item' id='indept'><?php echo html::checkbox('members', array($account => $realname), '');?></div>
+
+	          <?php endforeach;?>
+	          <div class='w-80px' ><strong><?php echo '部门外成员';//echo '非科室人员';?></strong><?php echo html::selectAll('extdept', 'checkbox', '');?></div>
+	          <?php $i = 1;?>
             <?php foreach($otherUsers as $account => $realname):?>
             <div class='group-item'><?php echo html::checkbox('members', array($account => $realname), '');?></div>
             <?php endforeach;?>

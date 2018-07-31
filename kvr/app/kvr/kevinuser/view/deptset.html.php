@@ -17,11 +17,11 @@
 			<table align='center' class='table table-form' id='pwdList'>
 				<thead>
 					<tr class='text-center'>
-						<th class='w-50px'><?php echo $lang->kevinuser->id; ?></th>
-						<th class='w-50px'><?php echo $lang->kevinuser->realname; ?></th>
-						<th class='w-150px'><?php echo $lang->kevinuser->account; ?></th>
-						<th class='w-150px'><?php echo $lang->kevinuser->dept; ?></th>
-						<th class='w-150px'><?php echo $lang->kevinuser->deptPrefer; ?></th>
+						<th class='w-30px'><?php echo $lang->kevinuser->id; ?></th>
+						<th class='w-100px'><?php echo $lang->kevinuser->realname; ?></th>
+						<th class='w-100px'><?php echo $lang->kevinuser->account; ?></th>
+						<th class='w-120px'><?php echo $lang->kevinuser->dept; ?></th>
+						<th class='w-80px'><?php echo $lang->kevinuser->deptPrefer; ?></th>
 						<th class='w-id'><?php echo $lang->actions; ?></th>
 					</tr>
 				</thead>
@@ -44,7 +44,7 @@
 							<td class='w-id'><?php echo $user->name. html::hidden("idList[$user->id]", $user->id);?></td>
 							<td class='w-id'><?php echo html::input("deptPreferList[$user->id]", $user->deptPrefer, "class='form-control'"); ?></td>
 							<td class='w-id'>
-								deletedeptuser<?php //commonModel::printIcon('kevinuser', 'deletedeptuser', "id=$user->id", '', 'list', 'remove', 'hiddenwin'); ?>
+								<?php commonModel::printLink('kevinuser', 'deletedeptuser', "id=$user->id", $lang->delete, "data-type='iframe' data-toggle='modal' ");?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -72,7 +72,7 @@
 						</tr>
 					<?php } ?>
 					<tr class='text-center'>
-						<td colspan="8"><?php echo html::submitButton('', '', 'btn-primary') . html::backButton(); ?></td>
+						<td colspan="8"><?php echo html::submitButton('', 'btn btn-default'); ?></td>
 					</tr>
 				</tbody>
 			</table>

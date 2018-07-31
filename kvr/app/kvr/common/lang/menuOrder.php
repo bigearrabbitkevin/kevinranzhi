@@ -36,7 +36,6 @@ if(!isset($lang->kevinuser->menu)) $lang->kevinuser->menu = new stdclass();
 $lang->kevinuser->menu->index		 = '首页|kevinuser|index|';
 $lang->kevinuser->menu->kevinbrowse	 = '用户.K|kevinuser|browse|';
 $lang->kevinuser->menu->deptlist	 = '部门列表|kevinuser|deptlist|';
-//$lang->kevinuser->menu->deptset	 = '部门指定|kevinuser|deptset|';
 $lang->kevinuser->menu->batchAddUser = array('link' => '<i class="icon-plus-sign"></i>&nbsp;批量添加|kevinuser|batchCreate|dept=%s', 'subModule' => 'kevinuser', 'float' => 'right');
 $lang->kevinuser->menu->addUser      = array('link' => '<i class="icon-plus"></i>&nbsp;添加用户|kevinuser|create|dept=%s', 'subModule' => 'kevinuser', 'float' => 'right');
 
@@ -56,5 +55,5 @@ if(!isset($lang->kevindept)) $lang->kevindept = new stdclass();
 if(!isset($lang->kevindept->menu)) $lang->kevindept->menu = new stdclass();
 
 $lang->kevindept->menu->index		 = '首页|kevindept|index|';
-$lang->kevindept->menu->kevinbrowse	 = 'browse|kevindept|browse|';
-$lang->kevindept->menu->deptlist	 = 'deptlist|kevindept|deptlist|';
+$lang->kevindept->menu->kevinbrowse	 = '部门结构|kevindept|browse|';
+$lang->kevindept->menu->deptlist	 = '部门列表|kevindept|deptlist|';

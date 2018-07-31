@@ -21,19 +21,19 @@ foreach(explode(',', $showFields) as $field)
 $minWidth = (count($visibleFields) > 5) ? 'w-150px' : '';
 ?>
 <form class='form-condensed' method='post' target='hiddenwin' id='dataform'>
-  <table class='table table-form table-fixed'> 
+  <table class='table table-fixed'>
     <thead>
       <tr>
         <th class='w-40px'>ID</th> 
         <th class='w-150px<?php echo zget($visibleFields, 'dept', ' hidden')?>'><?php echo $lang->kevinuser->dept;?></th>
 	    <th class='w-150px<?php echo zget($visibleFields, 'deptdispatch', ' hidden')?>'><?php echo $lang->kevinuser->deptdispatch;?></th>
-        <th class='w-130px'><?php echo $lang->kevinuser->account;?> <span class='required'></span></th>
-        <th class='w-130px'><?php echo $lang->kevinuser->realname;?> <span class='required'></span></th>
-        <th class='w-120px'><?php echo $lang->kevinuser->role;?> <span class='required'></span></th>
+        <th class='w-130px'><?php echo $lang->kevinuser->account;?> <span class='required' style="top:-5px;line-height: 1.1;"></span></th>
+        <th class='w-130px'><?php echo $lang->kevinuser->realname;?> <span class='required' style="top:-5px;line-height: 1.1;"></span></th>
+        <th class='w-120px'><?php echo $lang->kevinuser->role;?> <span class='required' style="top:-5px;line-height: 1.1;"></span></th>
         <th class='w-120px'><?php echo $lang->kevinuser->group;?></th>
-        <th class='<?php echo zget($visibleFields, 'email', "$minWidth hidden", $minWidth)?>'><?php echo $lang->kevinuser->email;?></th>
+        <th class='w-150px <?php echo zget($visibleFields, 'email', "$minWidth hidden", $minWidth)?>'><?php echo $lang->kevinuser->email;?></th>
         <th class='w-90px<?php echo zget($visibleFields, 'gender', ' hidden')?>'><?php echo $lang->kevinuser->gender;?></th>
-        <th class="<?php echo $minWidth?>"><?php echo $lang->kevinuser->password;?> <span class='required'></span></th>
+        <th class="w-150px <?php echo $minWidth?>"><?php echo $lang->kevinuser->password;?> <span class='required' style="top:-5px;line-height: 1.1;"></span></th>
         <th class='w-120px<?php echo zget($visibleFields, 'commiter', ' hidden')?>'><?php echo $lang->kevinuser->commiter;?></th>
         <th class='w-120px<?php echo zget($visibleFields, 'join', ' hidden')?>'>    <?php echo $lang->kevinuser->join;?></th>
         <th class='w-120px<?php echo zget($visibleFields, 'skype', ' hidden')?>'>   <?php echo $lang->kevinuser->skype;?></th>

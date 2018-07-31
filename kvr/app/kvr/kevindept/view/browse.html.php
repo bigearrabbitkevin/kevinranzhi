@@ -10,17 +10,16 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
-<div id='titlebar'>
-  <div class='heading'><?php echo html::icon($lang->icons['kevindept']);?> <?php echo $lang->kevindept->common;?></div>
-</div>
+<?php
+include '../../common/view/header.html.php';
+include '../../../sys/common/view/treeview.html.php';?>
 <div class='row'>
   <div class='col-sm-4'>
     <div class='panel'>
       <div class='panel-heading'><?php echo html::icon($lang->icons['kevindept']);?> <strong><?php echo $title;?></strong></div>
       <div class='panel-body'>
         <div class='container'>
-          <ul class='tree-lines' id='deptTree'></ul>
+          <div id='treeMenuBox'><?php echo $treeMenu;?></div>
         </div>
       </div>
     </div>
@@ -37,8 +36,6 @@
               <td>
                 <nobr>
                 <?php
-                echo html::a($this->createLink('kevindept', 'browse'), $this->app->company->name);
-                echo $lang->arrow;
                 foreach($parentDepts as $kevindept)
                 {
                     echo html::a($this->createLink('kevindept', 'browse', "deptID=$kevindept->id"), $kevindept->name);

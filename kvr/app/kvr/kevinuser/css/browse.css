@@ -1,0 +1,9 @@
+.user-control-nav{margin-bottom: 20px;}
+body {padding-top: 0;}
+/*.page-content{padding: 0;}*/
+.text-bold{font-weight: bold;}
+.search{margin-top: -7px; margin-right: -25px;}
+
+#querybox {margin: 35px -10px -7px; background-color: #fff; height: 0; border: 1px solid #ddd; position: relative; z-index: 1000; overflow: visible; display: none;}
+#querybox form {padding: 10px}
+#querybox.show {display: block; height: auto}
