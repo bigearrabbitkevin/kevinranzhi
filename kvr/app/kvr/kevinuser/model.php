@@ -24,8 +24,7 @@ class kevinuserModel extends model {
 	 */
 	public function batchCreate()
 	{
-		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->app->user->account) != $this->app->user->password) die(js::alert($this->lang->user->error->verifyPassword));
-		
+	
 		$users    = fixer::input('post')->get();
 		$data     = array();
 		$accounts = array();
@@ -140,25 +139,19 @@ class kevinuserModel extends model {
 	 * @return void
 	 */
 	public function create()
-	{
+	{		
 		if(!$this->checkPassword()) return;
-		
+
 		$user = fixer::input('post')
 			->setDefault('join', '0000-00-00')
 			->setIF($this->post->password1 != false, 'password', md5($this->post->password1))
 			->setIF($this->post->password1 == false, 'password', '')
-			->remove('group, password1, password2, verifyPassword')
+			->remove('group, password1, password2')
 			->get();
 		
 		if(isset($this->config->safe->mode) and $this->computePasswordStrength($this->post->password1) < $this->config->safe->mode)
 		{
 			dao::$errors['password1'][] = $this->lang->user->weakPassword;
-			return false;
-		}
-		
-		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->app->user->account) != $this->app->user->password)
-		{
-			dao::$errors['verifyPassword'][] = $this->lang->user->error->verifyPassword;
 			return false;
 		}
 		
@@ -200,8 +193,8 @@ class kevinuserModel extends model {
 		}
 		return !dao::isError();
 	}
-	
-	
+
+
 	/**
 	 * Compute  password strength.
 	 *
@@ -256,168 +249,6 @@ class kevinuserModel extends model {
 	}
 
 	/**
-	 * Batch delete dept. 
-	 * 
-	 * @param  array    $deptIDList 
-	 * @access public
-	 * @return void
-	 */
-	public function deptBatchDelete($deptIDList) {
-		$this->dao->update(TABLE_DEPT)->set('deleted')->eq(1)->where('id')->in($deptIDList)->exec();
-	}
-
-	/**
-	 * Batch update dept. 
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function deptBatchUpdate() {
-		$depts		 = array();
-		$allChanges	 = array();
-		$data		 = fixer::input('post')->get();
-		$oldDepts	 = $this->getDeptByIdList($this->post->deptIDList);
-		$deptModel	 = $this->loadModel('kevindept');
-		foreach ($data->deptIDList as $deptID) {
-			$parent			 = $deptModel->getById($data->parent[$deptID]);
-			$depts[$deptID]	 = new stdClass();
-
-			$depts[$deptID]->parent	 = $data->parent[$deptID];
-			$depts[$deptID]->name	 = $data->name[$deptID];
-			$depts[$deptID]->manager = $data->manager[$deptID];
-			$depts[$deptID]->email	 = $data->email[$deptID];
-			$depts[$deptID]->code	 = $data->code[$deptID];
-			$depts[$deptID]->grade	 = $parent ? $parent->grade + 1 : 1;
-			$depts[$deptID]->path	 = $parent ? $parent->path . $deptID . ',' : ',' . $deptID . ',';
-			$depts[$deptID]->order	 = $data->order[$deptID];
-			if ($data->group[$deptID]) {
-				foreach ($data->group[$deptID] as $groupID) {
-					$depts[$deptID]->group .= "," . $groupID;
-				}
-
-				$depts[$deptID]->group .= ",";
-			}
-		}
-
-		foreach ($depts as $deptID => $dept) {
-			$oldDept = $oldDepts[$deptID];
-
-			$this->dao->update(TABLE_DEPT)->data($dept)
-				->autoCheck()
-				->batchCheck('parent,name,order', 'notempty')
-				->where('id')->eq($deptID)
-				->limit(1)
-				->exec();
-
-			if (dao::isError()) die(js::error('deptBatchUpdate#' . $deptID . dao::getError(true)));
-			$allChanges[$deptID] = commonModel::createChanges($oldDept, $dept);
-		}
-		return $allChanges;
-	}
-
-	/**
-	 * create dept.
-	 * 
-	 * @access public
-	 * @return int
-	 */
-	public function deptCreate() {
-		$postData		 = fixer::input('post')->get();
-		$deptModel		 = $this->loadModel('kevindept');
-		$parent			 = $deptModel->getById($this->post->parent);
-		$dept			 = new stdClass();
-		$dept->parent	 = $postData->parent;
-		$dept->name		 = $postData->name;
-		$dept->manager	 = $postData->manager;
-		$dept->email	 = $postData->email;
-		$dept->code		 = $postData->code;
-		$dept->order	 = $postData->order;
-		$dept->grade	 = $parent ? $parent->grade + 1 : 1;
-
-		if ($this->post->group) {
-			foreach ($this->post->group as $groupID) {
-				$dept->group .= "," . $groupID;
-			}
-
-			$dept->group .= ",";
-		}
-		$this->dao->insert(TABLE_DEPT)->data($dept)
-			->autoCheck()
-			->batchCheck('parent,name,order', 'notempty')
-			->exec();
-		$id = $this->dbh->lastInsertID();
-
-		$path = $parent ? $parent->path . $id . ',' : ',' . $id . ',';
-		$this->dao->update(TABLE_DEPT)
-			->set('path')->eq($path)
-			->autoCheck()
-			->where('id')
-			->eq($id)
-			->exec();
-
-		return $id;
-	}
-
-	/**
-	 * Delete a dept.
-	 * 
-	 * @param  int    $id 
-	 * @access public
-	 * @return void
-	 */
-	public function deptDelete($id) {
-		$this->dao->update(TABLE_DEPT)
-			->set('deleted')
-			->eq(1)
-			->where('id')
-			->eq($id)
-			->exec();
-	}
-
-	/**
-	 * Update dept.
-	 * 
-	 * @param  int    $id 
-	 * @access public
-	 * @return array
-	 */
-	public function deptUpdate($id) {
-		$allChanges		 = array();
-		$postData		 = fixer::input('post')->get();
-		$deptModel		 = $this->loadModel('kevindept');
-		$oldDept		 = $deptModel->getById($id);
-		$parent			 = $deptModel->getById($this->post->parent);
-		$dept			 = new stdClass();
-		$dept->parent	 = $postData->parent;
-		$dept->name		 = $postData->name;
-		$dept->manager	 = $postData->manager;
-		$dept->email	 = $postData->email;
-		$dept->code		 = $postData->code;
-		$dept->order	 = $postData->order;
-		$dept->grade	 = $parent ? $parent->grade + 1 : 1;
-		$dept->path		 = $parent ? $parent->path . $id . ',' : ',' . $id . ',';
-		if ($this->post->group) {
-			foreach ($this->post->group as $groupID) {
-				$dept->group .= "," . $groupID;
-			}
-
-			$dept->group .= ",";
-		}else{
-			$dept->group = '';
-		}
-		$this->dao->update(TABLE_DEPT)
-			->data($dept)
-			->autoCheck()
-			->batchCheck('parent,name,order', 'notempty')
-			->where('id')
-			->eq($id)
-			->exec();
-		$allChanges[$id] = commonModel::createChanges($oldDept, $dept);
-
-		return $allChanges;
-	}
-
-	/**
 	 * Get all accounts.
 	 * 
 	 * @access public
@@ -458,8 +289,6 @@ class kevinuserModel extends model {
 	public function getById($userID, $field = 'account')
 	{
 		$user = $this->dao->select('*')->from(TABLE_USER)->where($field)->eq($userID)->fetch();
-		if(!$user) return false;
-		$user->last = date(DT_DATETIME1, $user->last);
 		return $user;
 	}
 
@@ -469,7 +298,7 @@ class kevinuserModel extends model {
 	 * @param  int    $query
 	 * @param  int    $pager
 	 * @access public
-	 * @return void
+	 * @return
 	 */
 	public function getByQuery($query, $pager = null, $orderBy = 'id')
 	{
@@ -480,7 +309,6 @@ class kevinuserModel extends model {
 			->page($pager)
 			->fetchAll();
 	}
-
 
 	/**
 	 * Get contact list of a user.
@@ -524,7 +352,6 @@ class kevinuserModel extends model {
 	{
 		return $this->dao->select('account, realname')->from(TABLE_USER)->where('account')->in($accountList)->fetchPairs();
 	}
-
 
 	/**
 	 * Create a contact list.
@@ -574,7 +401,6 @@ class kevinuserModel extends model {
 	{
 		return $this->dao->delete()->from(TABLE_USERCONTACT)->where('id')->eq($listID)->exec();
 	}
-
 
 	/**
 	 * Get by id.
@@ -643,26 +469,6 @@ class kevinuserModel extends model {
 		return $deptlist;
 	}
 
-	/**
-	 * Get hours deptset.
-	 * 
-	 * @param  object    $pager 
-	 * @access public
-	 * @return array
-	 */
-	public function getDeptset($pager = null) {
-		$deptusers = $this->dao->select('a.*,u.realname,d.name')
-			->from(TABLE_KEVIN_DEPTSET)->alias('a')
-			->leftJoin(TABLE_USER)->alias('u')
-			->on('a.account=u.account')
-			->leftJoin(TABLE_DEPT)->alias('d')
-			->on('a.deptPrefer=d.id')
-			->orderBy('a.account')
-			->page($pager)
-			->fetchAll();
-		return $deptusers;
-	}
-	
 	public function getDeptArray() {
 		$depts = $this->dao->select('id,name')->from(TABLE_DEPT)
 			->where('id')->ne(0)
@@ -1059,27 +865,21 @@ class kevinuserModel extends model {
 	 * @return void
 	 */
 	public function update($userID)
-	{
+	{		
 		if(!$this->checkPassword(true)) return;
-		
+
 		$oldUser = $this->getById($userID, 'id');
 		
 		$userID = $oldUser->id;
 		$user = fixer::input('post')
 			->setDefault('join', '0000-00-00')
 			->setIF($this->post->password1 != false, 'password', md5($this->post->password1))
-			->remove('password1, password2, groups,verifyPassword')
+			->remove('account,password1, password2, groups')
 			->get();
 		
 		if(isset($this->config->safe->mode) and isset($user->password) and $this->computePasswordStrength($this->post->password1) < $this->config->safe->mode)
 		{
 			dao::$errors['password1'][] = $this->lang->kevinuser->weakPassword;
-			return false;
-		}
-		
-		if(empty($_POST['verifyPassword']) or md5(md5($this->post->verifyPassword) . $this->post->account) != $oldUser->password)
-		{
-			dao::$errors['verifyPassword'][] = $this->lang->kevinuser->error->verifyPassword;
 			return false;
 		}
 		
@@ -1130,7 +930,7 @@ class kevinuserModel extends model {
 
 	/**
 	 * Update hours deptset.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -1174,7 +974,7 @@ class kevinuserModel extends model {
 
 		return $message;
 	}
-	
+
 	public function userbatchedit() {
 		$oldUsers		 = $this->dao->select('id, account')->from(TABLE_USER)->where('id')->in(array_keys($this->post->account))->fetchPairs('id', 'account');
 		$accountGroup	 = $this->dao->select('id, account')->from(TABLE_USER)->where('account')->in($this->post->account)->fetchGroup('account', 'id');
@@ -1218,7 +1018,6 @@ class kevinuserModel extends model {
 			}
 		}
 	}
-	
 
 	public function lockUser($account) {
 		$this->dao->update(TABLE_USER)->set('fails')->eq(0)->set('locked')->eq('2030-01-01 00:00:00')

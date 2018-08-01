@@ -19,7 +19,7 @@
     <div class='side-body'>
         <div class='panel panel-sm'>
             <div class='panel-heading nobr'><?php echo html::icon($lang->icons['company']);?> <strong>
-					<?php commonModel::printLink('kevinuser', 'deptlist', "", $lang->kevinuser->deptFilter);?></strong>
+					<?php commonModel::printLink('kevindept', 'deptlist', "", $lang->kevinuser->deptFilter);?></strong>
             </div>
             <div style="min-height:220px">
 				<?php include 'deptfilter.html.php';?>
@@ -72,14 +72,14 @@
 					<td class='text-center'><input name="deptIDList[]" value="<?php echo $item->id;?>" type="checkbox"> <?php printf('%03d', $item->id);?></td>
 					<td class='text-center'>
 						<?php
-						if (commonModel::hasPriv('kevinuser', 'deptview')) echo html::a($this->createLink('kevinuser', 'deptview', "id=$item->id", '', true), "<i class='icon-search'></i>","data-toggle='modal' data-type='iframe' data-icon='search'");
-						if (commonModel::hasPriv('kevinuser', 'deptedit')) echo html::a($this->createLink('kevinuser', 'deptedit', "id=$item->id", '', true), "<i class='icon-pencil'></i>","data-toggle='modal' data-type='iframe' data-icon='pencil'");
-						if (commonModel::hasPriv('kevinuser', 'deptdelete')) echo html::a($this->createLink('kevinuser', 'deptdelete', "id=$item->id", '', true), "<i class='icon-remove'></i>", "target='hiddenwin ' data-toggle='modal'");
-						if (commonModel::hasPriv('kevinuser', 'deptcreate')) echo html::a($this->createLink('kevinuser', 'deptcreate', "id=$item->id", '', true), "<i class='icon-copy'></i>","data-toggle='modal' data-type='iframe' data-icon='copy'");
+						if (commonModel::hasPriv('kevindept', 'deptview')) echo html::a($this->createLink('kevindept', 'deptview', "id=$item->id"), "<i class='icon-search'></i>","data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptedit')) echo html::a($this->createLink('kevindept', 'deptedit', "id=$item->id"), "<i class='icon-pencil'></i>","data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptdelete')) echo html::a($this->createLink('kevindept', 'deptdelete', "id=$item->id"), "<i class='icon-remove'></i>", " data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptcreate')) echo html::a($this->createLink('kevindept', 'deptcreate', "id=$item->id"), "<i class='icon-copy'></i>","data-toggle='modal'");
 						?>
 					</td>
-					<td class='text-center'><?php echo html::a($this->createLink('kevinuser', 'deptlist', 'path=' . $item->id), $item->name);?></td>
-					<td class='text-center'><?php echo html::a($this->createLink('kevinuser', 'deptlist', 'path=' . $item->parent),!empty($item->parentName) ? $item->parentName : $lang->kevinuser->topParent);?>(<?php echo $item->parent;?>)</td>
+					<td class='text-center'><?php echo html::a($this->createLink('kevindept', 'deptlist', 'path=' . $item->id), $item->name);?></td>
+					<td class='text-center'><?php echo html::a($this->createLink('kevindept', 'deptlist', 'path=' . $item->parent),!empty($item->parentName) ? $item->parentName : $lang->kevinuser->topParent);?>(<?php echo $item->parent;?>)</td>
 					<td class='text-center'><?php echo $item->path;?></td>
 					<td class='text-center'><?php echo $item->order;?></td>
 					<td class='text-center'><?php echo !empty($item->realname)?$item->realname:$item->manager;?></td>
@@ -104,16 +104,16 @@
                     <td colspan='<?php echo $columns;?>'>
                         <div class='table-actions clearfix'>
 					<?php
-					$canBatchDelete	 = commonModel::hasPriv('kevinuser', 'deptBatchDelete');
-					$canBatchEdit	 = commonModel::hasPriv('kevinuser', 'deptBatchEdit');
+					$canBatchDelete	 = commonModel::hasPriv('kevindept', 'deptBatchDelete');
+					$canBatchEdit	 = commonModel::hasPriv('kevindept', 'deptBatchEdit');
 
 					if (count($deptList)) {
 						echo html::selectButton();
 						echo "<div class='btn-group'>";
-						$actionLink	 = $this->createLink('kevinuser', 'deptBatchDelete');
+						$actionLink	 = $this->createLink('kevindept', 'deptBatchDelete');
 						$misc		 = $canBatchDelete ? "onclick=\"setFormAction('$actionLink','hiddenwin',this)\"" : "disabled='disabled'";
 						echo html::commonButton($lang->kevinuser->batchdelete, 'btn btn-default',$misc);
-						$actionLink	 = $this->createLink('kevinuser', 'deptBatchEdit');
+						$actionLink	 = $this->createLink('kevindept', 'deptBatchEdit');
 						$misc		 = $canBatchEdit ? "onclick=\"setFormAction('$actionLink',null,this)\"" : "disabled='disabled'";
 						echo html::commonButton($lang->kevinuser->batchedit, 'btn btn-default', $misc);
 						echo "</div>";

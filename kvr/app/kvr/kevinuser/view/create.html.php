@@ -10,7 +10,7 @@
  * @link        http://www.zentao.net
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
+<?php include '../../common/view/header.modal.html.php';?>
 <?php include '../../../sys/common/view/datepicker.html.php';?>
 <?php if(!empty($config->safe->mode)) $lang->kevinuser->placeholder->password1 = $lang->kevinuser->placeholder->passwordStrength[$config->safe->mode]?>
 <?php js::set('holders', $lang->kevinuser->placeholder);?>
@@ -22,7 +22,7 @@
 			<strong><small class='text-muted'><?php echo html::icon($lang->icons['create']);?></small> <?php echo $lang->kevinuser->create;?></strong>
 		</div>
 	</div>
-	<form class='form-condensed mw-700px' method='post' target='hiddenwin' id='dataform'>
+	<form class='form-condensed mw-700px' method='post' target='hiddenwin' id='dataform' action="<?php echo inLink('create'); ?>">
 		<table align='center' class='table table-form'>
 			<tr>
 				<th class='w-120px'><?php echo $lang->kevinuser->dept;?></th>
@@ -80,17 +80,10 @@
 				<th><?php echo $lang->kevinuser->gender;?></th>
 				<td><?php echo html::radio('gender', (array)$lang->kevinuser->genderList, 'm');?></td>
 			</tr>
-			<tr>
-				<th><?php echo $lang->kevinuser->verifyPassword;?></th>
-				<td>
-					<div class="required required-wrapper"></div>
-					<?php echo html::password('verifyPassword', '', "class='form-control disabled-ie-placeholder' autocomplete='off' placeholder='{$lang->kevinuser->placeholder->verify}'");?>
-				</td>
-			</tr>
 
 			<tr><th></th><td><?php echo html::submitButton() . html::backButton();?></td></tr>
 		</table>
 	</form>
 </div>
 <?php js::set('passwordStrengthList', $lang->kevinuser->passwordStrengthList)?>
-<?php include '../../common/view/footer.html.php';?>
+<?php include '../../common/view/footer.modal.html.php';?>

@@ -15,9 +15,6 @@
 	<div class='heading'>
 		<span class='prefix'><?php echo html::icon($lang->icons['project']);?></span>
 		<strong><small class='text-muted'><?php echo html::icon($lang->icons['batchEdit']);?></small> <?php echo $title;?></strong>
-		<div class='actions'>
-			<button type="button" class="btn btn-default" data-toggle="customModal"><i class='icon icon-cog'></i> </button>
-		</div>
 	</div>
 </div>
 <?php
@@ -58,7 +55,7 @@ $minWidth = (count($visibleFields) > 5) ? 'w-150px' : '';
 </form>
 <?php include '../../common/view/footer.html.php';?>
 <script>
-	$("li[data-id='kevinuser']").addClass('active');
+	$("li[data-id='kevindept']").addClass('active');
 	$("li[data-id='deptlist']").addClass('active');
 </script>
 <?php include '../../common/view/footer.html.php';?>

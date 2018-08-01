@@ -16,7 +16,7 @@
 <div class='container mw-700px'>
 
     <div class="main" style="min-height: 450px;">
-        <form class='form-condensed mw-700px' method='post' target='hiddenwin' id='dataform'>
+        <form class='form-condensed mw-700px' method='post' action="<?php echo inLink($modelName,'deptID='.$dept->id); ?>">
             <table align='center' class='table table-form'>
                 <tr>
                     <th class='w-80px'><?php echo $lang->kevinuser->deptParent;?></th>
@@ -49,13 +49,6 @@
                 <tr><th></th><td><?php echo html::submitButton() . html::backButton();?></td></tr>
             </table>
         </form>
-        <div style="margin-top: 20px;">
-			<?php
-			if ($func == "edit") {
-				include '../../common/view/action.html.php';
-			}
-			?>
-        </div>
     </div>
 </div>
 <?php include '../../common/view/footer.modal.html.php';?>

@@ -82,14 +82,6 @@ $minWidth = (count($visibleFields) > 5) ? 'w-150px' : '';
       <td class='<?php echo zget($visibleFields, 'zipcode', 'hidden')?>'> <?php echo html::input("zipcode[$i]",  '', "class='form-control'");?></td>
     </tr>  
     <?php endfor;?>
-    <tr>
-      <th colspan='2'><?php echo $lang->kevinuser->verifyPassword?></th>
-      <td colspan='<?php echo count($visibleFields) + 4?>'>
-        <div class="required required-wrapper"></div>
-        <input type='password' style="display:none"> <!-- for disable autocomplete all browser -->
-        <?php echo html::password('verifyPassword', '', "class='form-control disabled-ie-placeholder' autocomplete='off' placeholder='{$lang->kevinuser->placeholder->verify}'");?>
-      </td>
-    </tr>
     <tr><td colspan='<?php echo count($visibleFields) + 6?>' class='text-center'><?php echo html::submitButton() . html::backButton();?></td></tr>
   </table>
 </form>

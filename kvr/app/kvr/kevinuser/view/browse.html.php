@@ -24,7 +24,7 @@ $longLockTime  = '2030-01-01 00:00:00';
 
 ?>
 <div id='menuActions'>
-  <?php commonModel::printLink('kevinuser', 'create', "dept=$deptID", '<i class="icon-plus"></i> ' . $this->lang->kevinuser->create, "id='createButton' class='btn btn-primary'");?>
+  <?php commonModel::printLink('kevinuser', 'create', "dept=$deptID", '<i class="icon-plus"></i> ' . $this->lang->kevinuser->create, "id='createButton' class='btn btn-primary' data-toggle='modal'");?>
   <?php commonModel::printLink('kevinuser', 'batchCreate', "dept=$deptID", '<i class="icon-plus-sign"></i> ' . $this->lang->kevinuser->batchCreate, "id='createButton' class='btn btn-primary'");?>
 </div>
 <div id='querybox'  class='show' style="margin: -20px -20px 20px;"><?php echo $searchForm ;?></div>
@@ -50,7 +50,7 @@ $longLockTime  = '2030-01-01 00:00:00';
 					<thead>
 					<tr class='text-center'>
 						<?php $vars = "param=$param&type=$type&orderBy=%s&recTotal={$pager->recTotal}&recPerPage={$pager->recPerPage}"; ?>
-						<th class='text-center w-auto'><?php commonModel::printorderlink('id', $orderBy, $vars, $lang->kevinuser->idAB); ?></th>
+						<th class='text-center w-id'><?php commonModel::printorderlink('id', $orderBy, $vars, $lang->kevinuser->idAB); ?></th>
 						<th class='text-center w-auto'><?php commonModel::printorderlink('realname', $orderBy, $vars, $lang->kevinuser->realname); ?></th>
 <!--						<th class='text-center w-auto'>--><?php //echo $lang->kevinuser->calendar; ?><!--</th>-->
 						<th class='text-center w-auto'><?php commonModel::printOrderLink('account', $orderBy, $vars, $lang->kevinuser->account); ?></th>
@@ -93,7 +93,7 @@ $longLockTime  = '2030-01-01 00:00:00';
 							<td><?php if (isset($depts[$user->deptdispatch]))	echo html::a($this->createLink('kevinuser', 'browse', "param=$user->deptdispatch"), $depts[$user->deptdispatch]); ?></td>
 							<td><?php echo html::mailto($user->email); ?></td>
 							<td><?php if (isset($lang->kevinuser->genderList[$user->gender])) echo $lang->kevinuser->genderList[$user->gender]; ?></td>
-							<td><?php if ($user->last) echo date('Y-m-d', $user->last); ?></td>
+							<td><?php echo $user->last; ?></td>
 							<td><?php echo $user->visits; ?></td>
 							<td class='text-left'>
 								<?php 

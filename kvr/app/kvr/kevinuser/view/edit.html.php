@@ -16,22 +16,29 @@
   <div id='titlebar'>
     <div class='heading'>
       <span class='prefix' title='USER'><?php echo html::icon($lang->icons['user']);?> <strong><?php echo $user->id;?></strong></span>
-      <strong><?php if(!commonModel::printLink('kevinuser', 'view', "account=$user->account", $user->realname)) echo $user->realname;?> (<small><?php echo $user->account;?></small>)</strong>
+      <strong><?php echo $user->realname;?> (<small><?php echo $user->account;?></small>)</strong>
       <small class='text-muted'> <?php echo $lang->kevinuser->edit;?> <?php echo html::icon($lang->icons['edit']);?></small>
+
     </div>
   </div>
   <form class='form-condensed' method='post' target='hiddenwin' id='userform'>
-    <table align='center' class='table table-form'>
+	  <span style="position: absolute;right: 25px;top: 25px;"  ><?php echo html::submitButton($lang->save, 'btn btn-default', 'onclick=editUser()');?></span>
+   <table align='center' class='table table-form'>
       <caption class='text-left text-muted'><?php echo $lang->kevinuser->basicInfo;?></caption>
       <tr>
         <th class='w-90px'><?php echo $lang->kevinuser->realname;?></th>
-        <td class='w-p40'><?php echo html::input('realname', $user->realname, "class='form-control'");?></td><td></td><td></td>
+        <td class='w-p40'><?php echo html::input('realname', $user->realname, "class='form-control'");?></td>
+	      <th><?php echo $lang->kevinuser->role;?></th>
+	      <td><?php echo html::select('role', $lang->kevinuser->roleList, $user->role, "class='form-control'");?></td>
       </tr>
       <tr>
         <th class='w-90px'><?php echo $lang->kevinuser->dept;?></th>
-        <td class='w-p40'><?php echo html::select('dept', $depts, $user->dept, "class='form-control chosen'");?></td>
-        <th><?php echo $lang->kevinuser->role;?></th>
-        <td><?php echo html::select('role', $lang->kevinuser->roleList, $user->role, "class='form-control'");?></td>
+        <td class='w-p40' colspan="3"><?php echo html::select('dept', $depts, $user->dept, "class='form-control chosen'");?></td>
+
+       </tr>
+      <tr>
+        <th class='w-90px'><?php echo $lang->kevinuser->deptdispatch;?></th>
+		    <td class='w-p40' colspan="3"><?php echo html::select('deptdispatch', $depts, $user->deptdispatch, "class='form-control chosen'");?></td>
       </tr>
       <tr>
         <th><?php echo $lang->group->priv;?></th>
@@ -49,7 +56,7 @@
       <caption class='text-left text-muted'><?php echo $lang->kevinuser->accountInfo;?></caption>
       <tr>
         <th class='w-90px'><?php echo $lang->kevinuser->account;?></th>
-        <td class='w-p40'><?php echo html::input('account', $user->account, "class='form-control' autocomplete='off'");?></td>
+        <td class='w-p40'><?php echo html::input('account', $user->account, "class='form-control' autocomplete='off' disabled");?></td>
         <th class='w-90px'><?php echo $lang->kevinuser->email;?></th>
         <td>
           <?php echo html::input('email', $user->email, "class='form-control'");?>
@@ -104,17 +111,7 @@
         <td><?php echo html::input('zipcode', $user->zipcode, "class='form-control'");?></td>
       </tr>
     </table>
-    <table align='center' class='table table-form'>
-      <caption class='text-left text-muted'><?php echo $lang->kevinuser->verify;?></caption>
-      <tr>
-        <th class='w-120px'><?php echo $lang->kevinuser->verifyPassword;?></th>
-        <td>
-          <div class="required required-wrapper"></div>
-          <?php echo html::password('verifyPassword', '', "class='form-control disabled-ie-placeholder' autocomplete='off' placeholder='{$lang->kevinuser->placeholder->verify}'");?>
-        </td>
-      </tr>
-      <tr><td colspan='2' class='text-center'><?php echo html::submitButton($lang->save, 'btn btn-default', 'onclick=editUser()') . html::backButton();?></td></tr>
-    </table>
+
   </form>
 </div>
 <script lanugage='javascript'>
