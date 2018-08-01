@@ -5,12 +5,13 @@
  * @copyright   Copyright 2009-2018 青岛易软天创网络科技有限公司(QingDao Nature Easy Soft Network Technology Co,LTD, www.cnezsoft.com)
  * @license     ZPL (http://zpl.pub/page/zplv12.html)
  * @author      Chunsheng Wang <chunsheng@cnezsoft.com>
- * @package     user 
+ * @package     user
  * @version     $Id: edit.html.php 4029 2016-08-26 06:50:41Z liugang $
  * @link        http://www.ranzhi.org
  */
 ?>
 <?php include $app->getModuleRoot() . '../sys/common/view/header.modal.html.php'; ?>
+<?php include $app->getModuleRoot() . '../sys/common/view/chosen.html.php'; ?>
 <form method='post' id='editForm' action="<?php echo inlink('editself', "account={$user->account}");?>" class='form-condensed'>
   <fieldset>
     <legend><?php echo $lang->user->basicInfo; ?></legend>
@@ -26,25 +27,25 @@
       <tr>
         <th><?php echo $lang->user->gender;?></th>
         <td><?php unset($lang->user->genderList->u); echo html::radio('gender', $lang->user->genderList, $user->gender);?></td>
-      </tr>  
+      </tr>
       <?php if($this->app->user->admin == 'super'):?>
       <tr>
         <th><?php echo $lang->user->dept;?></th>
-        <td><?php echo html::select('dept', $depts, $user->dept, "class='form-control'");?></td>
+        <td><?php echo html::select('dept', $depts, $user->dept, "class='form-control chosen'");?></td>
       </tr>
       <tr>
         <th><?php echo $lang->user->role;?></th>
-        <td><?php echo html::select('role', $lang->user->roleList, $user->role, "class='form-control'");?></td><td></td>
+        <td><?php echo html::select('role', $lang->user->roleList, $user->role, "class='form-control '");?></td><td></td>
       </tr>
       <?php endif;?>
       <tr>
         <th><?php echo $lang->user->password;?></th>
         <td><?php echo html::password('password1', '', "class='form-control' autocomplete='off'")?></td><td></td>
-      </tr>  
+      </tr>
       <tr>
         <th><?php echo $lang->user->password2;?></th>
         <td><?php echo html::password('password2', '', "class='form-control'");?></td><td></td>
-      </tr>  
+      </tr>
     </table>
   </fieldset>
   <fieldset>

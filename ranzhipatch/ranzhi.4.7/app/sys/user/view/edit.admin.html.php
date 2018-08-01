@@ -5,15 +5,16 @@
  * @copyright   Copyright 2009-2018 青岛易软天创网络科技有限公司(QingDao Nature Easy Soft Network Technology Co,LTD, www.cnezsoft.com)
  * @license     ZPL (http://zpl.pub/page/zplv12.html)
  * @author      Chunsheng Wang <chunsheng@cnezsoft.com>
- * @package     user 
+ * @package     user
  * @version     $Id: edit.admin.html.php 4029 2016-08-26 06:50:41Z liugang $
  * @link        http://www.ranzhi.org
  */
 ?>
 <?php include '../../common/view/header.html.php';?>
 <?php include '../../common/view/treeview.html.php';?>
+<?php include '../../common/view/chosen.html.php';?>
 <div class="col-md-12">
-  <div class='row'> 
+  <div class='row'>
     <?php include './deptside.html.php';?>
     <div class='col-md-10'>
       <div class="panel">
@@ -36,14 +37,14 @@
                 <tr>
                   <th><?php echo $lang->user->super;?></th>
                   <td><input name='admin' type='checkbox' value='super' <?php if($user->admin == 'super') echo 'checked';?>></td><td></td>
-                </tr>  
+                </tr>
                 <tr>
                   <th><?php echo $lang->user->gender;?></th>
                   <td><?php unset($lang->user->genderList->u); echo html::radio('gender', $lang->user->genderList, $user->gender);?></td>
-                </tr>  
+                </tr>
                 <tr>
                   <th class='w-80px'><?php echo $lang->user->dept;?></th>
-                  <td class='w-p40'><?php echo html::select('dept', $depts, $user->dept, "class='form-control'");?></td>
+                  <td class='w-p40'><?php echo html::select('dept', $depts, $user->dept, "class='form-control chosen'");?></td>
                 </tr>
                 <tr>
                   <th><?php echo $lang->user->role;?></th>
@@ -52,11 +53,11 @@
                 <tr>
                   <th><?php echo $lang->user->password;?></th>
                   <td><?php echo html::password('password1', '', "class='form-control' autocomplete='off'")?></td><td></td>
-                </tr>  
+                </tr>
                 <tr>
                   <th><?php echo $lang->user->password2;?></th>
                   <td><?php echo html::password('password2', '', "class='form-control'");?></td><td></td>
-                </tr>  
+                </tr>
               </table>
             </fieldset>
             <fieldset>
@@ -85,7 +86,7 @@
                   <td colspan='3'><?php echo html::input('address', $user->address, "class='form-control'");?></td>
                 </tr>
               </table>
-            </fieldset>          
+            </fieldset>
             <?php echo html::submitButton();?>
           </div>
         </form>
