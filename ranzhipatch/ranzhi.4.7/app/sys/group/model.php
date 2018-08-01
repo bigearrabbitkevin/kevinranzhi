@@ -179,6 +179,25 @@ class groupModel extends model
     }
 
     /**
+     * Get user pairs of a group.
+     *
+     * @param  int    $groupID
+     * @access public
+     * @return array
+     */
+    public function getUserNotInPairs($groupID,$deptID)
+    {
+        return $this->dao->select('t2.account, t2.realname')
+            ->from(TABLE_USERGROUP)->alias('t1')
+            ->leftJoin(TABLE_USER)->alias('t2')->on('t1.account = t2.account')
+            ->where('`group`')->ne((int)$groupID)
+            ->andWhere('`dept`')->eq((int)$deptID)
+            ->andWhere('t2.deleted')->eq(0)
+            ->orderBy('t2.account')
+            ->fetchPairs();
+    }
+
+    /**
      * Delete a group.
      * 
      * @param  int    $groupID 
@@ -514,4 +533,115 @@ class groupModel extends model
 
         $this->loadModel('setting')->setItem("system.sys.group.unUpdatedAccounts", ',' . trim($groupAccounts, ',') . ',');
     }
+
+	//------------------------------下面是追加的函数------------------------------
+
+	/**
+	 * Build the query.
+	 *
+	 * @param  int $rootDeptID
+	 * @access public
+	 * @return string
+	 */
+	public function buildMenuQuery($rootDeptID) {
+		$rootDept = $this->getByID($rootDeptID);
+		if (!$rootDept) {
+			$rootDept       = new stdclass();
+			$rootDept->path = '';
+		}
+
+		return $this->dao->select('*')->from(TABLE_CATEGORY)
+			->beginIF($rootDeptID > 0)->where('path')->like($rootDept->path.'%')->fi()
+			->orderBy('grade desc, `order`')
+			->get();
+	}
+
+	public function createGroupManageMemberLink($dept, $groupID) {
+		return html::a(helper::createLink('group', 'manageMember', "groupID=$groupID&deptID={$dept->id}"), $dept->name, '_self', "id='dept{$dept->id}'");
+	}
+
+	/**
+	 * Get the treemenu of departments.
+	 *
+	 * @param  int    $rootDeptID
+	 * @param  string $userFunc
+	 * @param  int    $param
+	 * @access public
+	 * @return string
+	 */
+	public function getTreeMenu($rootDeptID = 0, $userFunc, $param = 0) {
+		$deptMenu = array();
+		$stmt     = $this->dbh->query($this->buildMenuQuery($rootDeptID));
+		while ($dept = $stmt->fetch()) {
+			$linkHtml = call_user_func($userFunc, $dept, $param);
+
+			if (isset($deptMenu[$dept->id]) and !empty($deptMenu[$dept->id])) {
+				if (!isset($deptMenu[$dept->parent])) $deptMenu[$dept->parent] = '';
+				$deptMenu[$dept->parent] .= "<li>$linkHtml";
+				$deptMenu[$dept->parent] .= "<ul>".$deptMenu[$dept->id]."</ul>\n";
+			} else {
+				if (isset($deptMenu[$dept->parent]) and !empty($deptMenu[$dept->parent])) {
+					$deptMenu[$dept->parent] .= "<li>$linkHtml\n";
+				} else {
+					$deptMenu[$dept->parent] = "<li>$linkHtml\n";
+				}
+			}
+			$deptMenu[$dept->parent] .= "</li>\n";
+		}
+
+		$lastMenu = "<ul class='tree tree-lines'>".@array_pop($deptMenu)."</ul>\n";
+		return $lastMenu;
+	}
+
+	/**
+	 * Get all childs.
+	 *
+	 * @param  int $deptID
+	 * @access public
+	 * @return array
+	 */
+	public function getAllChildId($deptID) {
+		if ($deptID == 0) return array();
+		$dept   = $this->getDeptByID($deptID);
+		$childs = $this->dao->select('id')->from(TABLE_DEPT)->where('path')->like($dept->path.'%')->fetchPairs();
+		return array_keys($childs);
+	}
+
+	/**
+	 * Get user pairs of a department.
+	 *
+	 * @param  int $deptID
+	 * @access public
+	 * @return array
+	 */
+	public function getDeptUserPairs($deptID = 0) {
+		$childDepts = $this->getAllChildID($deptID);
+		return $this->dao->select('account, realname')->from(TABLE_USER)
+			->where('deleted')->eq(0)
+			->beginIF($deptID)->andWhere('dept')->in($childDepts)->fi()
+			->orderBy('account')
+			->fetchPairs();
+	}
+
+	/**
+	 * Get a department by id.
+	 *
+	 * @param  int $deptID
+	 * @access public
+	 * @return object
+	 */
+	public function getDeptByID($deptID) {
+		return $this->dao->findById($deptID)->from(TABLE_DEPT)->fetch();
+	}
+
+	/**
+	 * Get User By deptID
+	 *
+	 * @param  int $deptID
+	 * @access public
+	 * @return object
+	 */
+	public function getUserByDept($deptID) {
+		return $this->dao->select('account,account as code')->from(TABLE_USER)->where('dept')->eq($deptID)->fetchPairs('account','code');
+	}
 }

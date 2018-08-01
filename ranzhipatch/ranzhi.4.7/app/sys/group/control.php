@@ -291,32 +291,39 @@ class group extends control
      * @access public
      * @return void
      */
-    public function manageMember($groupID)
-    {
-        if(!empty($_POST))
-        {
-            $this->group->updateUser($groupID);
-            if(dao::isError()) $this->send(array('result' => 'fail', 'message' => dao::getError()));
-            $this->group->updateAccounts($groupID);
-            $this->send(array('result' => 'success', 'message' => $this->lang->saveSuccess, 'locate' => inlink('browse')));
-        }
-        $group      = $this->group->getById($groupID);
-        $groupUsers = $this->group->getUserPairs($groupID);
-        $allUsers   = $this->user->getPairs('nodeleted,noforbidden,noclosed,noempty');
-        $otherUsers = array_diff_assoc($allUsers, $groupUsers);
 
-        $title      = $group->name . $this->lang->group->manageMember;
-        $position[] = $group->name;
-        $position[] = $this->lang->group->manageMember;
+	public function manageMember($groupID, $deptID = 0) {
+		if (!empty($_POST)) {
+			$this->group->updateUser($groupID);
+			if (isonlybody()) die(js::closeModal('parent.parent', 'this'));
+			//die(js::alert('Save successfully!'));
+			die(js::locate($this->createLink('group', 'browse'), 'parent'));
+		}
+		$group        = $this->group->getById($groupID);         //获取组信息
+		$deptAllUsers = $this->group->getDeptUserPairs($deptID); //获取所有包含子部门的用户
+		$groupUsers   = $this->group->getUserPairs($groupID);    //组内用户
+		$deptusers    = $this->group->getUserByDept($deptID);    //部门内用户
+		$allUsers     = $this->group->getDeptUserPairs(0);       //所有用户
 
-        $this->view->title      = $title;
-        $this->view->position   = $position;
-        $this->view->group      = $group;
-        $this->view->groupUsers = $groupUsers;
-        $this->view->otherUsers = $otherUsers;
+		$groupNotInUsers = array_diff_assoc($deptAllUsers, $groupUsers);
+		$otherUsers = array_diff_assoc($allUsers, $groupUsers, $groupNotInUsers);
 
-        $this->display();
-    }
+		$title      = $this->lang->company->common.$this->lang->colon.$group->name.$this->lang->colon.$this->lang->group->manageMember;
+		$position[] = $group->name;
+		$position[] = $this->lang->group->manageMember;
+
+		$this->view->title           = $title;
+		$this->view->position        = $position;
+		$this->view->group           = $group;
+		$this->view->treemenu        = $this->group->getTreeMenu($rooteDeptID = 0, array('groupModel', 'createGroupManageMemberLink'), $groupID);
+		$this->view->deptusers       = $deptusers;
+		$this->view->groupNotInUsers = $groupNotInUsers;
+		$this->view->groupUsers      = $groupUsers;
+		$this->view->otherUsers      = $otherUsers;
+
+		$this->display();
+	}
+
 
     /**
      * Delete a group.
