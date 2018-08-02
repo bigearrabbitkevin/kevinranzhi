@@ -1,0 +1,60 @@
+.with-side {position: relative;}
+.with-side .main{padding-left: 300px;}
+.with-side .side {position: fixed; left: 15px; top: 100px; width: 280px;}
+.with-side .nav > li > a {padding: 10px 6px;}
+
+.hide-side .main{padding-left: 0;}
+.hide-side .side {width: 0;}
+.hide-side .side-body {display: none;}
+.hide-side .side-content {display: none;}
+.with-side .side, .with-side .main {transition: all 0.3s ease 0s;}
+
+.side-handle {z-index: 99; position: absolute; right: 0px; top: 0px; transition: all 0.3s ease 0s;cursor:pointer}
+
+.side-btn {width: 15px;border: 1px solid #D1D1D1;background: none repeat scroll 0% 0% #D5D5D5;line-height: 34px;padding: 0px;text-align: center;}
+
+[data-toggle="droppable"] {cursor: move;}
+
+.board-item {margin-top: 5px;}
+.tab-content {padding: 5px 5px 40px 5px; border: 1px solid #ddd; border-top-color: transparent; min-height: 20px;}
+.page-num {padding: 5px 10px; margin: 5px; border: 1px solid #ddd; float: right; cursor: pointer; background: #f0f0f0;}
+
+.batch-actions{width: 600px;}
+.assign-action {display: inline-table; width: 200px; margin-left: 10px;}
+.assign-action .chosen-container-single .chosen-single{height: 33px; line-height: 23px;}
+
+.setTable{width:100%;margin-bottom:20px}
+.setTable th
+,.setTable td{padding:3px;line-height:1.42857143;vertical-align:top;border-bottom:1px solid #ddd;-webkit-transition:all .3s cubic-bezier(.175,.885,.32,1);-o-transition:all .3s cubic-bezier(.175,.885,.32,1);transition:all .3s cubic-bezier(.175,.885,.32,1)}
+.setTable>thead>tr>th{vertical-align:bottom;background-color:#f1f1f1;border-bottom:1px solid #ddd}
+.mw-800px {
+    max-width: 800px !important;
+}
+.mw-800px .table {
+    margin-bottom: 0;
+    border: 1px solid #ddd;
+}
+.container {
+    margin: 0 auto;
+    padding: 0;
+    border: 1px solid #ddd;
+}
+.mw-700px {
+    max-width: 700px !important;
+}
+
+#titlebar {
+    background: #F8FAFE;
+    border-bottom: 1px solid #e5e5e5;
+    min-height: 46px;
+    min-height: 20px\0;
+    padding: 13px 20px;
+    vertical-align: bottom;
+    position: relative;
+}
+
+#titlebar > .heading {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+}
