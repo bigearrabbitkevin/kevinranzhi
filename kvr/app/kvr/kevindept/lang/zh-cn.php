@@ -21,6 +21,7 @@ $lang->kevindept->manage      = "维护部门结构";
 $lang->kevindept->updateOrder = "更新排序";
 $lang->kevindept->add         = "添加部门";
 $lang->kevindept->dragAndSort = "拖动排序";
+$lang->kevindept->sync        = "同步";
 
 $lang->kevindept->confirmDelete = " 您确定删除该部门吗？";
 $lang->kevindept->successSave   = " 修改成功。";
@@ -28,3 +29,4 @@ $lang->kevindept->successSave   = " 修改成功。";
 $lang->kevindept->error = new stdclass();
 $lang->kevindept->error->hasSons  = '该部门有子部门，不能删除！';
 $lang->kevindept->error->hasUsers = '该部门有职员，不能删除！';
+$lang->kevindept->error->maxDeptId = "部门ID超过9999";

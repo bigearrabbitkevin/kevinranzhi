@@ -36,6 +36,18 @@ class kevindept extends control {
 		die(html::select('user', $users, $user, "class='form-control chosen'"));
 	}
 
+
+	/**
+	 * Ajax Sync Categpry
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function ajaxsynccategory($dept = 0, $struct = 0, $user = 0) {
+        $msg = $this->kevindept->syncDeptCategory();
+        echo $msg;
+	}
+
 	/**
 	 * Browse a department.
 	 *

@@ -12,7 +12,11 @@
 ?>
 <?php include '../../common/view/header.html.php';
 ?>
-
+<div id='menuActions'>
+	<?php
+	echo html::a('#', $this->lang->kevindept->sync, "class='btn btn-primary' onclick='syncDeptCategory()'");
+	?>
+</div>
 <div class="with-side <?php echo $this->cookie->todoCalendarSide == 'hide' ? 'hide-side' : '' ?>">
 <div class='side'>
     <a class='side-handle side-btn' data-id='gradeTree'><i class='icon-caret-left'></i></a>
@@ -100,7 +104,7 @@
 <?php endforeach;?>
             <tfoot>
                 <tr>
-			<?php if (!isset($columns)) $columns		 = ($this->cookie->windowWidth > $this->config->wideSize ? 16 : 16);?>
+			<?php if (!isset($columns)) $columns		 = ($this->cookie->windowWidth > $this->config->kevindept->wideSize ? 16 : 16);?>
                     <td colspan='<?php echo $columns;?>'>
                         <div class='table-actions clearfix'>
 					<?php
@@ -129,4 +133,14 @@
 	</div>
 </div>
 </div>
+<script>
+	function syncDeptCategory() {
+		$.ajax({
+			url: createLink("kevindept", "ajaxsynccategory"),
+			success: function(result) {
+				alert(result);
+			}
+		});
+	}
+</script>
 <?php include '../../common/view/footer.html.php';?>

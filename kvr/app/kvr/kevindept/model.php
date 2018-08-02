@@ -401,7 +401,7 @@ class kevindeptModel extends model {
 	 * @access public
 	 * @return array
 	 */
-	public function getUserPairs($accountList)
+	public function getUserPairs()
 	{
 		return array(""=>' ')+$this->dao->select('account, CONCAT(realname," (",account,")") realname')->from(TABLE_USER)->fetchPairs();
 	}
@@ -679,5 +679,81 @@ class kevindeptModel extends model {
 	 */
 	public function updateOrder($orders) {
 		foreach ($orders as $deptID => $order) $this->dao->update(TABLE_DEPT)->set('`order`')->eq($order)->where('id')->eq($deptID)->exec();
+	}
+
+	/**
+	 * 将dept数据同步到category.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function syncDeptCategory() {
+		$maxId = $this->dao->select('`id`')->from(TABLE_DEPT)->orderBy('id_desc')->limit(1)->fetch('id');
+		//如果部门id超过9999就报错返回
+		if($maxId > $this->config->kevindept->MaxDeptID){
+			return $this->lang->kevindept->error->maxDeptId;
+		}
+		$categories = $this->dao->select('*')->from(TABLE_CATEGORY)->fetchAll('id');
+		$depts = $this->dao->select('*')->from(TABLE_DEPT)->fetchAll('id');
+
+		foreach ($depts as $dept) {
+			$statusCount[] = 'TOTAL';
+			$deptNew                    = new stdclass();
+			$deptNew->id                = $dept->id;
+			$deptNew->name              = $dept->name;
+			$deptNew->parent            = $dept->parent;
+			$deptNew->path              = $dept->path;
+			$deptNew->grade             = $dept->grade;
+			$deptNew->order             = $dept->order;
+			$deptNew->type              = 'dept';
+			//判断本地部门数据是否存在对应部门id
+			if (array_key_exists($dept->id, $categories)) {
+				//如果数据不相同,则更新
+				if (!$this->isSameDept($categories[$dept->id], $depts[$dept->id])) {
+					$this->dao->update(TABLE_CATEGORY)->data($deptNew)->where('id')->eq($dept->id)->exec();
+					$statusCount[]=$this->config->kevindept->importStatus[1];
+				}else{
+					$statusCount[]=$this->config->kevindept->importStatus[3];
+				}
+			} else {
+				//不存在部门id,则新增
+				$this->dao->insert(TABLE_CATEGORY)->data($deptNew)->exec();
+				$statusCount[]=$this->config->kevindept->importStatus[2];
+			}
+		}
+		//本地多于Ucenter的部门数据标记删除
+//		foreach ($categories as $item) {
+//			if (!array_key_exists($item->id, $depts) && $item->deleted == 0) {
+//				$this->dao->update(TABLE_CATEGORY)->set('deleted')->eq(1)->where('id')->eq($item->id)->exec();
+//			}
+//		}
+
+		$statusCountArr = array_count_values($statusCount);
+
+		//将TOTAL移到数组最后一位
+		$tmp = $statusCountArr['TOTAL'];
+		unset($statusCountArr['TOTAL']);
+		$statusCountArr['TOTAL']=$tmp;
+
+		$str ='Update Category Success!';
+		//拼接提示信息
+		foreach ($statusCountArr as $k=>$v) {
+			$str .="\n". $k.':  '.$v;
+		}
+		return $str;
+
+	}
+
+	/*
+    * 查询部门是否相同
+    */
+	private function isSameDept(& $deptSource, & $deptTarget) {
+		if ($deptSource->name != $deptTarget->name) return false;
+		if ($deptSource->parent != $deptTarget->parent) return false;
+		if ($deptSource->path != $deptTarget->path) return false;
+		if ($deptSource->grade != $deptTarget->grade) return false;
+		if ($deptSource->order != $deptTarget->order) return false;
+
+		return true; //没有发现不同的
 	}
 }
