@@ -25,6 +25,7 @@ if(!isset($lang->kevinuser)) $lang->kevinuser = new stdclass();
 if(!isset($lang->kevinuser->menu)) $lang->kevinuser->menu = new stdclass();
 //$lang->kevinuser->menu->index		 = '首页|kevinuser|index|';
 $lang->kevinuser->menu->kevinbrowse	 = '用户|kevinuser|browse|';
+$lang->kevinuser->menu->kevindomainaccount	 = '域用户管理|kevinuser|domainaccount|';
 
 $lang->kevinuser->menuOrder[0]	 = 'index';
 $lang->kevinuser->menuOrder[10]	 = 'kevinbrowse';

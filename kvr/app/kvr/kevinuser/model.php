@@ -1037,4 +1037,63 @@ class kevinuserModel extends model {
 		$this->dao->update(TABLE_USER)->set('fails')->eq(0)->set('locked')->eq('0000-00-00 00:00:00')->where('account')->eq($account)->exec();
 	}
 
+	public function updateDefaultLdapusers() {
+		$data = fixer::input('post')->get();
+
+		if (!($data && isset($data->userIdList))) return false;
+
+		/* Initialize todos from the post data. */
+		foreach ($data->userIdList as $userID) {
+			$ldapuser					 = new stdClass();
+			$ldapuser->domainFullAccount = $data->domainFullAccount[$userID];
+			$ldapuser->id				 = $userID;
+			$ldapuser->account			 = $data->accountList[$userID];
+			if (!$ldapuser->account) continue;
+			if (strlen($ldapuser->domainFullAccount) > 0) {
+				$arrOfDomainAccount = explode("@", $ldapuser->domainFullAccount);
+				if (count($arrOfDomainAccount) != 2) {//get from domainFullAccount
+					$ldapuser->domainFullAccount = "";
+				}
+			}
+			if (!$ldapuser->domainFullAccount) $ldapuser->domainFullAccount = "";
+
+			$this->LdapUpdateFullAccount($ldapuser);
+		}
+	}
+
+	public function LdapClearDomainFullAccount($ldapuser) {
+		$domainFullAccount	 = $ldapuser->domainFullAccount;
+		if (!$domainFullAccount) return true;
+		$arr				 = explode("@", $domainFullAccount);
+		if (count($arr) != 2) return false; //email错误,用帐户
+		if (!$arr[1] || !$arr[0]) return false;
+
+		$this->dao->update(TABLE_USER)->set("domainFullAccount = null")
+			->where('domainFullAccount')->eq($ldapuser->domainFullAccount)->exec();
+		return true;
+	}
+
+	public function LdapUpdateFullAccount(&$ldapuser) {
+		if (!$this->LdapClearDomainFullAccount($ldapuser)) return false;
+
+		$this->dao->update(TABLE_USER)
+			->set("domainFullAccount")->eq($ldapuser->domainFullAccount)
+			->autoCheck()
+			->where('account')->eq($ldapuser->account)
+			->exec();
+	}
+
+
+	public function getDomainAccounts($pager = null, $filter) {
+		$ldapusers = $this->dao->select('id,account,realname,domainFullAccount')->from(TABLE_USER)
+			->where('domainFullAccount')->ne('')
+			->beginIF(!empty($filter) && !empty($filter['realname']))->andWhere('realname')->like('%'.$filter['realname'].'%')->FI()
+			->beginIF(!empty($filter) && !empty($filter['localname']))->andWhere('account')->like('%'.$filter['localname'].'%')->FI()
+			->beginIF(!empty($filter) && !empty($filter['remotename']))->andWhere('domainFullAccount')->like('%'.$filter['remotename'].'%')->FI()
+			->orderBy('account')
+			->page($pager)
+			->fetchAll();
+		return $ldapusers;
+	}
+
 }

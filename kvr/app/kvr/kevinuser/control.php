@@ -190,6 +190,63 @@ class kevinuser extends control {
 		}
 	}
 
+
+	public function domainaccount($recTotal = 0, $recPerPage = 10, $pageID = 1) {
+		$filter = [];
+		if (!empty($_POST)) {
+			$post = $_POST;
+			if(isset($post['realname']) || isset($post['localname']) || isset($post['remotename'])) {
+				if(isset($post['realname'])) $filter['realname'] = $post['realname'];
+				if(isset($post['localname'])) $filter['localname'] = $post['localname'];
+				if(isset($post['remotename'])) $filter['remotename'] = $post['remotename'];
+				$this->session->set('domainaccount_filter', $filter);
+			}else{
+				$this->kevinuser->updateDefaultLdapusers();
+				if (dao::isError()) die(js::error(dao::getError()));
+				$vars = array('recTotal' => $recTotal, 'recPerPage' => $recPerPage, 'pageID' => $pageID);
+				$link = $this->createLink('kevinuser', 'domainaccount', $vars);
+				die(js::locate($this->createLink('kevinuser', 'domainaccount', $vars), 'parent.parent'));
+			}
+		}
+		if(empty($filter) && $_SESSION['domainaccount_filter']) $filter = $_SESSION['domainaccount_filter'];
+		$this->domainaccountCorrect();
+		/* Load pager. */
+		$this->app->loadClass('pager', $static			 = true);
+		if ($this->app->getViewType() == 'mhtml') $recPerPage		 = 10;
+		$pager			 = pager::init($recTotal, $recPerPage, $pageID);
+		$pager->recTotal = 0;
+
+		$this->view->title			 = $this->lang->kevinuser->common . $this->lang->colon . $this->lang->kevinuser->domainaccount;
+		$this->view->position[]		 = $this->lang->kevinuser->domainaccount;
+		$this->view->domainaccounts	 = $this->kevinuser->getDomainAccounts($pager, $filter);
+		$this->view->pager			 = $pager;
+		$this->view->controlType	 = 'domainaccount';
+		$this->view->filter = $filter;
+		$this->display();
+	}
+
+	/**
+	 * Delete hours deptset.
+	 *
+	 * @param  int $id
+	 * @access public
+	 * @return void
+	 */
+	public function deleteldapuser($id, $confirm = 'no') {
+		if ($confirm == 'no') {
+			die(js::confirm($this->lang->kevinuser->contacts->confirmDelete, inlink('deleteldapuser', "id=$id&confirm=yes")). js::reload('parent'));
+		} else {
+			$this->dao->update(TABLE_USER)
+				->set("domainFullAccount")->eq("")
+				->where('id')->eq($id)
+				->exec();
+			if (dao::isError()) {
+				$this->send(array('result' => 'fail', 'message' => dao::getError()));
+			}
+			die(js::reload('parent'));
+		}
+	}
+
 	/**
 	 * Edit a user.
 	 *
@@ -609,6 +666,25 @@ class kevinuser extends control {
 		} else {
 			die(js::reload('parent'));
 		}
+	}
+
+	private function domainaccountCorrect() {
+		$ldapusers = $this->dao->select('*')->from(TABLE_KEVIN_LDAPUSER)
+			->where('domain')->ne('')
+			->fetchAll();
+		if (!$ldapusers) return true;
+
+		foreach ($ldapusers as $user) {
+			if (!$user->domain) continue;
+			$this->dao->update(TABLE_USER)
+				->set('domainFullAccount')->eq($user->remote . "@" . $user->domain)
+				->autoCheck()
+				->where('account')->eq($user->local)
+				->exec();
+		}
+
+		$this->dao->delete("*")->from(TABLE_KEVIN_LDAPUSER)->exec(); //empty
+		return true;
 	}
 
 }

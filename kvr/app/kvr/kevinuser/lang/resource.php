@@ -204,6 +204,11 @@ $lang->kevinuser->originalPassword = '原密码';
 $lang->kevinuser->verifyPassword   = '请输入你的密码';
 $lang->kevinuser->resetPassword    = '忘记密码';
 
+$lang->kevinuser->domainaccount	 = "域用户管理";
+$lang->kevinuser->remotename		 = "远程用户名";
+$lang->kevinuser->localname		 = "本地用户名";
+$lang->kevinuser->serialNum		 = '序号';
+
 $lang->kevinuser->genderList['m'] = '男';
 $lang->kevinuser->genderList['f'] = '女';
 

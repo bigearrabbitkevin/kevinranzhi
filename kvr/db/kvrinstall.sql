@@ -22,3 +22,19 @@ CREATE TABLE IF NOT EXISTS  `zt_dept` (
   KEY `dept` (`parent`,`path`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for kv_ldapuser
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `kv_ldapuser` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(100) DEFAULT NULL,
+  `remote` char(30) DEFAULT NULL,
+  `local` char(30) DEFAULT NULL,
+  `deleted` enum('0','1') NOT NULL DEFAULT '0',
+  `createdBy` varchar(30) NOT NULL,
+  `createdDate` datetime NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `kv_lapuser_domain_remote` (`domain`,`remote`),
+  KEY `kv_lapuser_remote` (`remote`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
