@@ -23,10 +23,22 @@ $lang->kevindept->add         = "添加部门";
 $lang->kevindept->dragAndSort = "拖动排序";
 $lang->kevindept->sync        = "同步";
 
+$lang->kevindept->index           = "首页";
+$lang->kevindept->deptlist        = "部门列表";
+$lang->kevindept->deptcreate      = "新增部门";
+$lang->kevindept->deptedit        = "编辑部门";
+$lang->kevindept->deptdelete      = "删除部门";
+$lang->kevindept->deptview        = "查看部门";
+$lang->kevindept->deptBatchEdit   = "批量编辑部门";
+$lang->kevindept->deptBatchDelete = "批量删除部门";
+$lang->kevindept->deptset         = "部门指定";
+$lang->kevindept->deletedeptuser  = "删除部门用户";
+$lang->kevindept->synccategory    = "同步部门分类";
+
 $lang->kevindept->confirmDelete = " 您确定删除该部门吗？";
 $lang->kevindept->successSave   = " 修改成功。";
 
-$lang->kevindept->error = new stdclass();
-$lang->kevindept->error->hasSons  = '该部门有子部门，不能删除！';
-$lang->kevindept->error->hasUsers = '该部门有职员，不能删除！';
+$lang->kevindept->error            = new stdclass();
+$lang->kevindept->error->hasSons   = '该部门有子部门，不能删除！';
+$lang->kevindept->error->hasUsers  = '该部门有职员，不能删除！';
 $lang->kevindept->error->maxDeptId = "部门ID超过9999";

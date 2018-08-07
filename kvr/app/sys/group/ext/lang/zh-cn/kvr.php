@@ -42,7 +42,9 @@ $lang->resource->kevindept->deptBatchDelete = 'deptBatchDelete';
 
 $lang->resource->kevindept->deptset	 = 'deptset';
 $lang->resource->kevindept->deletedeptuser	 = 'deletedeptuser';
+$lang->resource->kevindept->synccategory	 = 'synccategory';
 
 $lang->kevindept->methodOrder[5]	 = 'index';
 $lang->kevindept->methodOrder[10]	 = 'browse';
 $lang->kevindept->methodOrder[15]	 = 'deptlist';
+$lang->kevindept->methodOrder[20]	 = 'synccategory';

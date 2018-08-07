@@ -136,7 +136,7 @@
 <script>
 	function syncDeptCategory() {
 		$.ajax({
-			url: createLink("kevindept", "ajaxsynccategory"),
+			url: createLink("kevindept", "synccategory"),
 			success: function(result) {
 				alert(result);
 			}
