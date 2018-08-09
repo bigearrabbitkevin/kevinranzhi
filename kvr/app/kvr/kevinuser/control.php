@@ -209,7 +209,7 @@ class kevinuser extends control {
 			}
 		}
 		if(empty($filter) && $_SESSION['domainaccount_filter']) $filter = $_SESSION['domainaccount_filter'];
-		$this->domainaccountCorrect();
+
 		/* Load pager. */
 		$this->app->loadClass('pager', $static			 = true);
 		if ($this->app->getViewType() == 'mhtml') $recPerPage		 = 10;
@@ -667,24 +667,4 @@ class kevinuser extends control {
 			die(js::reload('parent'));
 		}
 	}
-
-	private function domainaccountCorrect() {
-		$ldapusers = $this->dao->select('*')->from(TABLE_KEVIN_LDAPUSER)
-			->where('domain')->ne('')
-			->fetchAll();
-		if (!$ldapusers) return true;
-
-		foreach ($ldapusers as $user) {
-			if (!$user->domain) continue;
-			$this->dao->update(TABLE_USER)
-				->set('domainFullAccount')->eq($user->remote . "@" . $user->domain)
-				->autoCheck()
-				->where('account')->eq($user->local)
-				->exec();
-		}
-
-		$this->dao->delete("*")->from(TABLE_KEVIN_LDAPUSER)->exec(); //empty
-		return true;
-	}
-
 }
