@@ -265,7 +265,7 @@ class kevinuser extends control {
 		{
 			$this->kevinuser->update($userID);
 			if(dao::isError()) die(js::error(dao::getError()));
-			die(js::locate($this->session->userList ? $this->session->userList : $this->createLink('kevinuser', 'browse'), 'parent'));
+			die(js::locate($this->session->userList ? $this->session->userList : $this->inlink( 'browse'), 'parent'));
 		}
 		
 		$user       = $this->kevinuser->getById($userID, 'id');

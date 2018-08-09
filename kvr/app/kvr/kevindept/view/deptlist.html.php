@@ -41,11 +41,16 @@
 			<tbody>
 				<tr>
 					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptName?></th>
-					<td id="materialfilter" class="w-400px"><?php echo $deptName?></td>
+					<td id="materialfilter" class="w-300px"><?php echo $deptName?></td>
 					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptParent?></th>
-					<td id="materialfilter" class="w-400px"><?php echo $deptParent;?></td>
+					<td id="materialfilter" class="w-300px"><?php echo $deptParent;?></td>
 					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptgroup?></th>
-					<td id="materialfilter" class="w-400px"><?php  echo $deptGroup;	?></tr>	
+					<td id="materialfilter" class="w-300px"><?php  echo $deptGroup;	?>
+			<td><?php echo html::a($this->createLink('kevindept', 'deptview', "id=$deptID"), "查看","data-toggle='modal'");
+				echo html::a($this->createLink('kevindept', 'deptedit', "id=$deptID"), "编辑","data-toggle='modal'");
+				echo html::a($this->createLink('kevindept', 'deptdelete', "id=$deptID"), "删除", " data-toggle='modal'");
+				echo html::a($this->createLink('kevindept', 'deptcreate', "id=$deptID&createNew=true"), "添加","data-toggle='modal'");
+				echo html::a($this->createLink('kevindept', 'deptcreate', "id=$deptID"), "复制","data-toggle='modal'"); ?></td></tr>
 			</tbody></table>
 	</fieldset>
 	<?php endif;?>
@@ -76,10 +81,10 @@
 					<td class='text-center'><input name="deptIDList[]" value="<?php echo $item->id;?>" type="checkbox"> <?php printf('%03d', $item->id);?></td>
 					<td class='text-center'>
 						<?php
-						if (commonModel::hasPriv('kevindept', 'deptview')) echo html::a($this->createLink('kevindept', 'deptview', "id=$item->id"), "<i class='icon-search'></i>","data-toggle='modal'");
-						if (commonModel::hasPriv('kevindept', 'deptedit')) echo html::a($this->createLink('kevindept', 'deptedit', "id=$item->id"), "<i class='icon-pencil'></i>","data-toggle='modal'");
-						if (commonModel::hasPriv('kevindept', 'deptdelete')) echo html::a($this->createLink('kevindept', 'deptdelete', "id=$item->id"), "<i class='icon-remove'></i>", " data-toggle='modal'");
-						if (commonModel::hasPriv('kevindept', 'deptcreate')) echo html::a($this->createLink('kevindept', 'deptcreate', "id=$item->id"), "<i class='icon-copy'></i>","data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptview')) echo html::a($this->createLink('kevindept', 'deptview', "id=$item->id"), "查看","data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptedit')) echo html::a($this->createLink('kevindept', 'deptedit', "id=$item->id"), "编辑","data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptdelete')) echo html::a($this->createLink('kevindept', 'deptdelete', "id=$item->id"), "删除", " data-toggle='modal'");
+						if (commonModel::hasPriv('kevindept', 'deptcreate')) echo html::a($this->createLink('kevindept', 'deptcreate', "id=$item->id"), "复制","data-toggle='modal'");
 						?>
 					</td>
 					<td class='text-center'><?php echo html::a($this->createLink('kevindept', 'deptlist', 'path=' . $item->id), $item->name);?></td>

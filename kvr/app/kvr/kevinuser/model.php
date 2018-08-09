@@ -873,7 +873,7 @@ class kevinuserModel extends model {
 		$userID = $oldUser->id;
 		$user = fixer::input('post')
 			->setDefault('join', '0000-00-00')
-			->setIF($this->post->password1 != false, 'password', md5($this->post->password1))
+			->setIF($this->post->password1 != false, 'password', md5(md5($this->post->password1).$oldUser->account))
 			->remove('account,password1, password2, groups')
 			->get();
 		
@@ -891,18 +891,7 @@ class kevinuserModel extends model {
 			->checkIF($this->post->email != false, 'email', 'email')
 			->where('id')->eq((int)$userID)
 			->exec();
-		
-		/* If account changed, update the privilege. */
-		if($this->post->account != $oldUser->account)
-		{
-			$this->dao->update(TABLE_USERGROUP)->set('account')->eq($this->post->account)->where('account')->eq($oldUser->account)->exec();
-			if(strpos($this->app->company->admins, ',' . $oldUser->account . ',') !== false)
-			{
-				$admins = str_replace(',' . $oldUser->account . ',', ',' . $this->post->account . ',', $this->app->company->admins);
-				$this->dao->update(TABLE_COMPANY)->set('admins')->eq($admins)->where('id')->eq($this->app->company->id)->exec();
-				if(!dao::isError()) $this->app->user->account = $this->post->account;
-			}
-		}
+
 		
 		if(isset($_POST['groups']))
 		{

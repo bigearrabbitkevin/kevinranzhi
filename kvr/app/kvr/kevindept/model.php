@@ -12,24 +12,149 @@
 
 class kevindeptModel extends model {
 	/**
-	 * Build the query.
+	 * Process categories.
 	 *
-	 * @param  int $rootDeptID
+	 * @param  array  $categories
+	 * @param  string $type
+	 * @access public
+	 * @return array
+	 */
+	public function process($categories = array(), $type = '')
+	{
+		foreach($categories as $key => $category)
+		{
+			if(!$this->hasRight($category, $type, $categories))
+			{
+				unset($categories[$key]);
+				continue;
+			}
+		}
+
+		return $categories;
+	}
+
+	/**
+	 * Check current user has Privilege for this category.
+	 *
+	 * @param  mixed  $category
+	 * @param  string $type
+	 * @param  array  $categories
+	 * @access public
+	 * @return bool
+	 */
+	public function hasRight($category = null, $type = '', $categories = array())
+	{
+		if($this->app->user->admin == 'super') return true;
+
+		if(!is_object($category)) $category = $this->getByID($category, $type);
+		if(!$category) return true;
+
+		if(empty($category->users) && empty($category->rights))
+		{
+			$hasRight = true;
+		}
+		else
+		{
+			$hasRight = false;
+			if(!empty($category->users))
+			{
+				$hasRight = strpos($category->users, ',' . $this->app->user->account . ',') !== false;
+			}
+
+			if(!$hasRight && !empty($category->rights))
+			{
+				$groups   = array_intersect($this->app->user->groups, explode(',', $category->rights));
+				$hasRight = !empty($groups);
+			}
+
+			if(!$hasRight && !empty($category->moderators))
+			{
+				$hasRight = in_array($this->app->user->account, $category->moderators);
+			}
+		}
+
+		if($hasRight && !empty($category->parent))
+		{
+			$category = zget($categories, $category->parent);
+			$hasRight = $this->hasRight($category, $type, $categories);
+		}
+
+		return $hasRight;
+	}
+
+	/**
+	 * Build the sql to execute.
+	 *
+	 * @param string $type              the tree type, for example, article|forum
+	 * @param int    $startCategory     the start category id
+	 * @param int    $root
 	 * @access public
 	 * @return string
 	 */
-	public function buildMenuQuery($rootDeptID) {
-		$rootDept = $this->getByID($rootDeptID);
-		if (!$rootDept) {
-			$rootDept       = new stdclass();
-			$rootDept->path = '';
+	public function buildQuery($type, $startCategory = 0, $root = 0)
+	{
+		/* Get the start category path according the $startCategory. */
+		$startPath = '';
+		if($startCategory > 0)
+		{
+			$startCategory = $this->getById($startCategory);
+			if($startCategory) $startPath = $startCategory->path . '%';
 		}
 
 		return $this->dao->select('*')->from(TABLE_DEPT)
-			->beginIF($rootDeptID > 0)->where('path')->like($rootDept->path.'%')->fi()
+			->where(1)
+			->beginIF($root)->andWhere('root')->eq((int)$root)->fi()
+			->beginIF($startPath)->andWhere('path')->like($startPath)->fi()
 			->orderBy('grade desc, `order`')
 			->get();
 	}
+
+	/**
+     * Get the tree menu in <ul><ol> type.
+     *
+     * @param  string   $type           the tree type
+     * @param  int      $startCategoryID  the start category
+     * @param  string   $userFunc       which function to be called to create the link
+     * @param  int      $root
+     * @access public
+     * @return string   the html code of the tree menu.
+     */
+    public function getTreeMenu($type = 'article', $startCategoryID = 0, $userFunc, $root = 0)
+    {
+        $treeMenu   = array();
+        $categories = array();
+        $stmt = $this->dbh->query($this->buildQuery($type, $startCategoryID, $root));
+        while($category = $stmt->fetch())
+        {
+            $categories[$category->id] = $category;
+        }
+        $categories = $this->process($categories, $type);
+        foreach($categories as $category)
+        {
+            $linkHtml = call_user_func($userFunc, $category);
+
+            if(isset($treeMenu[$category->id]) and !empty($treeMenu[$category->id]))
+            {
+                if(!isset($treeMenu[$category->parent])) $treeMenu[$category->parent] = '';
+                $treeMenu[$category->parent] .= "<li>$linkHtml";
+                $treeMenu[$category->parent] .= "<ul>".$treeMenu[$category->id]."</ul>\n";
+            }
+            else
+            {
+                if(isset($treeMenu[$category->parent]) and !empty($treeMenu[$category->parent]))
+                {
+                    $treeMenu[$category->parent] .= "<li>$linkHtml\n";
+                }
+                else
+                {
+                    $treeMenu[$category->parent] = "<li>$linkHtml\n";
+                }
+            }
+            $treeMenu[$category->parent] .= "</li>\n";
+        }
+        $lastMenu = "<ul class='tree'>" . @array_pop($treeMenu) . "</ul>\n";
+        return $lastMenu;
+    }
 
 	/**
 	 * Create the manage link.
@@ -171,7 +296,7 @@ class kevindeptModel extends model {
 		}
 		$this->dao->insert(TABLE_DEPT)->data($dept)
 			->autoCheck()
-			->batchCheck('parent,name,order', 'notempty')
+			->batchCheck('name,order', 'notempty')
 			->exec();
 		$id = $this->dbh->lastInsertID();
 
@@ -563,36 +688,23 @@ class kevindeptModel extends model {
 	}
 
 	/**
-	 * Get the treemenu of departments.
+	 * Build the query.
 	 *
-	 * @param  int    $rootDeptID
-	 * @param  string $userFunc
-	 * @param  int    $param
+	 * @param  int $rootDeptID
 	 * @access public
 	 * @return string
 	 */
-	public function getTreeMenu($rootDeptID = 0, $userFunc, $param = 0) {
-		$deptMenu = array();
-		$stmt     = $this->dbh->query($this->buildMenuQuery($rootDeptID));
-		while ($kevindept = $stmt->fetch()) {
-			$linkHtml = call_user_func($userFunc, $kevindept, $param);
-
-			if (isset($deptMenu[$kevindept->id]) and !empty($deptMenu[$kevindept->id])) {
-				if (!isset($deptMenu[$kevindept->parent])) $deptMenu[$kevindept->parent] = '';
-				$deptMenu[$kevindept->parent] .= "<li>$linkHtml";
-				$deptMenu[$kevindept->parent] .= "<ul>".$deptMenu[$kevindept->id]."</ul>\n";
-			} else {
-				if (isset($deptMenu[$kevindept->parent]) and !empty($deptMenu[$kevindept->parent])) {
-					$deptMenu[$kevindept->parent] .= "<li>$linkHtml\n";
-				} else {
-					$deptMenu[$kevindept->parent] = "<li>$linkHtml\n";
-				}
-			}
-			$deptMenu[$kevindept->parent] .= "</li>\n";
+	public function buildMenuQuery($rootDeptID) {
+		$rootDept = $this->getByID($rootDeptID);
+		if (!$rootDept) {
+			$rootDept       = new stdclass();
+			$rootDept->path = '';
 		}
 
-		$lastMenu = "<ul class='tree tree-lines'>".@array_pop($deptMenu)."</ul>\n";
-		return $lastMenu;
+		return $this->dao->select('*')->from(TABLE_DEPT)
+			->beginIF($rootDeptID > 0)->where('path')->like($rootDept->path.'%')->fi()
+			->orderBy('grade desc, `order`')
+			->get();
 	}
 
 	/**
@@ -633,6 +745,7 @@ class kevindeptModel extends model {
 		foreach ($childs as $deptID => $deptName) {
 			if (empty($deptName)) continue;
 			if (is_numeric($deptID)) {
+
 				$kevindept->name   = strip_tags($deptName);
 				$kevindept->parent = $parentDeptID;
 				$kevindept->grade  = $grade;

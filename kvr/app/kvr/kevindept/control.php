@@ -48,11 +48,11 @@ class kevindept extends control {
 		$this->view->title       = $this->lang->kevindept->manage.$this->lang->colon.$this->app->company->name;
 		$this->view->position[]  = $this->lang->kevindept->manage;
 		$this->view->deptID      = $deptID;
-		$this->view->depts       = $this->kevindept->getTreeMenu($rootDeptID = 0, array('deptmodel', 'createManageLink'));
+//		$this->view->depts       = $this->kevindept->getTreeMenu($rootDeptID = 0, array('deptmodel', 'createManageLink'));
 		$this->view->parentDepts = $parentDepts;
 		$this->view->sons        = $this->kevindept->getSons($deptID);
 		$this->view->tree        = $this->kevindept->getDataStructure(0);
-		$this->view->treeMenu    = $this->loadModel('tree')->getTreeMenu('dept', 0, array('kevindeptModel', 'createMemberLink'));
+		$this->view->treeMenu    = $this->kevindept->getTreeMenu('dept', 0, array('kevindeptModel', 'createMemberLink'));
 		//$this->view->treeMenu    = $this->kevindept->getTreeMenu( 0,  'createManageLink');
 		$this->display();
 	}
@@ -155,6 +155,7 @@ class kevindept extends control {
 		$dept                    = $this->kevindept->getDept($path);
 		$groups                  = $this->loadModel('group')->getPairs();
 		if ($dept) {
+			$this->session->set('deptID', $dept->id);
 			$this->session->set('deptName', $dept->name);
 			$this->session->set('deptParent', !empty($dept->parentName) ? $dept->parentName : $this->lang->kevinuser->topParent);
 			$groupitem = '';
@@ -166,6 +167,7 @@ class kevindept extends control {
 			}
 			$this->session->set('deptGroup', $groupitem);
 		}
+		$this->view->deptID     = $this->session->deptID;
 		$this->view->deptName   = $this->session->deptName;
 		$this->view->deptParent = $this->session->deptParent;
 		$this->view->deptGroup  = $this->session->deptGroup;
@@ -231,7 +233,7 @@ class kevindept extends control {
 		$users = $this->kevindept->getPairs('noletter|noclosed');
 
 		$deptIDList = $this->post->deptIDList ? $this->post->deptIDList : die(js::locate($this->createLink('kevindept', 'deptlist'), 'parent'));
-		if (count($deptIDList) > $this->config->kevinuser->batchEditNum) {
+		if (count($deptIDList) > 5) {
 			die(js::alert($this->lang->kevinuser->batchEditMsg).js::locate($this->createLink('kevindept', 'deptlist'), 'parent'));
 		}
 		$depts = $this->dao->select('*')->from(TABLE_DEPT)->where('id')->in($deptIDList)->fetchAll('id');
@@ -255,7 +257,7 @@ class kevindept extends control {
 	 * @access public
 	 * @return void
 	 */
-	public function deptcreate($id = '') {
+	public function deptcreate($id = '',$createNew =false) {
 		if (!empty($_POST)) {
 			$deptID = $this->kevindept->deptCreate();
 			if (dao::isError()) die(js::error(dao::getError()));
@@ -267,6 +269,7 @@ class kevindept extends control {
 		$users                  = $this->kevindept->getPairs('noletter|noclosed');
 		$this->view->optionMenu = $this->kevindept->getOptionMenu();
 		$this->view->modelName  = 'deptcreate';
+		if ($createNew) $this->view->createNew=true;
 		$this->view->users      = $users;
 		$this->view->groups     = $this->loadModel('group')->getPairs();
 		$this->view->func       = 'create';
@@ -315,7 +318,7 @@ class kevindept extends control {
 					$this->action->logHistory($actionID, $changes);
 				}
 			}
-			if (dao::isError()) die(js::error(dao::getError()));
+			if (dao::isError()) die($this->send(array('result'=>'fail','message'=>dao::getError())));
 			die(js::alert($this->lang->kevinuser->successSave).js::locate(inLink('deptlist')));
 		}
 		$dept                   = $this->kevindept->getById($deptID);

@@ -150,13 +150,13 @@ $lang->kevinuser->calendar = '日历';
 $lang->kevinuser->userbatchedit  = "批量编辑用户";
 $lang->kevinuser->manageContacts = "维护联系人";
 
-$lang->kevinuser->lockedTemp = "临时被锁定。";
-$lang->kevinuser->lockedLong = "长期被锁定。";
-$lang->kevinuser->userLock   = '锁定用户';
-$lang->kevinuser->unlock     = "解锁";
-$lang->kevinuser->locked     = "锁定";
-$lang->kevinuser->lockedNone = "正常";
-$lang->kevinuser->lockedShort     = "临时";
+$lang->kevinuser->lockedTemp  = "临时被锁定。";
+$lang->kevinuser->lockedLong  = "长期被锁定。";
+$lang->kevinuser->userLock    = '锁定用户';
+$lang->kevinuser->unlock      = "解锁";
+$lang->kevinuser->locked      = "锁定";
+$lang->kevinuser->lockedNone  = "正常";
+$lang->kevinuser->lockedShort = "临时";
 
 $lang->kevinuser->create       = '添加用户';
 $lang->kevinuser->edit         = "编辑用户";
@@ -203,6 +203,8 @@ $lang->kevinuser->ditto            = '同上';
 $lang->kevinuser->originalPassword = '原密码';
 $lang->kevinuser->verifyPassword   = '请输入你的密码';
 $lang->kevinuser->resetPassword    = '忘记密码';
+$lang->kevinuser->code             = '工号';
+$lang->kevinuser->cardId           = '卡号';
 
 $lang->kevinuser->domainaccount	 = "域用户管理";
 $lang->kevinuser->remotename		 = "远程用户名";

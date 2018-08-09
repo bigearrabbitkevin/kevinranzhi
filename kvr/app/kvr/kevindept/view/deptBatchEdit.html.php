@@ -41,13 +41,13 @@ $minWidth = (count($visibleFields) > 5) ? 'w-150px' : '';
 		<?php foreach ($deptIDList as $deptID):?>
 			<tr class='text-center'>
 				<td><?php echo sprintf('%03d', $deptID) . html::hidden("deptIDList[$deptID]", $deptID);?></td>
-				<td class='<?php echo zget($visibleFields, 'parent', 'hidden')?>'><?php echo html::select("parent[$deptID]", $optionMenu, $depts[$deptID]->parent, "class='form-control chosen pull-right'");?></td>
-				<td class='<?php echo zget($visibleFields, 'name', 'hidden')?>'><?php echo html::input("name[$deptID]", $depts[$deptID]->name, "class='form-control' autocomplete='off'");?></td>
-				<td class='<?php echo zget($visibleFields, 'manager', 'hidden')?>'><?php echo html::select("manager[$deptID]", $users, $depts[$deptID]->manager, "class='form-control chosen'");?></td>
-				<td class='<?php echo zget($visibleFields, 'group', 'hidden')?>'><?php echo html::select("group[$deptID][]", $groups, isset($depts[$deptID]->group)?$depts[$deptID]->group:'', "size=3 multiple=multiple class='form-control chosen'");?></td>
-				<td class='<?php echo zget($visibleFields, 'email', 'hidden')?>'><?php echo html::input("email[$deptID]", $depts[$deptID]->email, "class='form-control' autocomplete='off'");?></td>
-				<td class='<?php echo zget($visibleFields, 'code', 'hidden')?>'><?php echo html::input("code[$deptID]", $depts[$deptID]->code, "class='form-control' autocomplete='off'");?></td>
-				<td class='<?php echo zget($visibleFields, 'order', 'hidden')?>'><?php echo html::input("order[$deptID]", $depts[$deptID]->order, "class='form-control' autocomplete='off'");?></td>
+				<td ><?php echo html::select("parent[$deptID]", $optionMenu, $depts[$deptID]->parent, "class='form-control chosen pull-right'");?></td>
+				<td ><?php echo html::input("name[$deptID]", $depts[$deptID]->name, "class='form-control' autocomplete='off'");?></td>
+				<td ><?php echo html::select("manager[$deptID]", $users, $depts[$deptID]->manager, "class='form-control chosen'");?></td>
+				<td ><?php echo html::select("group[$deptID][]", $groups, isset($depts[$deptID]->group)?$depts[$deptID]->group:'', "size=3 multiple=multiple class='form-control chosen'");?></td>
+				<td ><?php echo html::input("email[$deptID]", $depts[$deptID]->email, "class='form-control' autocomplete='off'");?></td>
+				<td ><?php echo html::input("code[$deptID]", $depts[$deptID]->code, "class='form-control' autocomplete='off'");?></td>
+				<td ><?php echo html::input("order[$deptID]", $depts[$deptID]->order, "class='form-control' autocomplete='off'");?></td>
 			</tr>
 		<?php endforeach;?>
 		<tr><td colspan='<?php echo count($visibleFields) + 6?>' class='text-center'><?php echo html::submitButton() . html::backButton();?></td></tr>

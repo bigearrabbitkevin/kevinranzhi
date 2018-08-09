@@ -51,6 +51,12 @@
         <th><?php echo $lang->kevinuser->gender;?></th>
         <td><?php echo html::radio('gender', (array)$lang->kevinuser->genderList, $user->gender);?></td>
       </tr>
+	   <tr>
+		   <th><?php echo $lang->kevinuser->code;?></th>
+		   <td><?php echo html::input('code', $user->code, "class='form-control'"); ?></td>
+		   <th><?php echo $lang->kevinuser->cardId;?></th>
+		   <td><?php echo html::input('cardId', $user->cardId, "class='form-control'"); ?></td>
+	   </tr>
     </table>
     <table align='center' class='table table-form'>
       <caption class='text-left text-muted'><?php echo $lang->kevinuser->accountInfo;?></caption>
