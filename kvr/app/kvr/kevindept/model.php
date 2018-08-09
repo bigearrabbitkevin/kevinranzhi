@@ -360,8 +360,8 @@ class kevindeptModel extends model {
 		}
 		$this->dao->update(TABLE_DEPT)
 			->data($dept)
-			->autoCheck()
-			->batchCheck('parent,name,order', 'notempty')
+			->autocheck('order')
+			->batchCheck('name', 'notempty')
 			->where('id')
 			->eq($id)
 			->exec();

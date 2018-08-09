@@ -40,12 +40,12 @@
 		<table class="table-borderless" cellspacing="0" cellpadding="0"> 
 			<tbody>
 				<tr>
-					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptName?></th>
-					<td id="materialfilter" class="w-300px"><?php echo $deptName?></td>
-					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptParent?></th>
-					<td id="materialfilter" class="w-300px"><?php echo $deptParent;?></td>
-					<th class="text-left w-120px"><?php echo $lang->kevinuser->deptgroup?></th>
-					<td id="materialfilter" class="w-300px"><?php  echo $deptGroup;	?>
+					<th class="text-left w-auto"><?php echo $lang->kevinuser->deptName?></th>
+					<td id="materialfilter" class="w-200px"><?php echo $deptName?></td>
+					<th class="text-left w-auto"><?php echo $lang->kevinuser->deptParent?></th>
+					<td id="materialfilter" class="w-200px"><?php echo $deptParent;?></td>
+					<th class="text-left w-auto"><?php echo $lang->kevinuser->deptgroup?></th>
+					<td id="materialfilter" class="w-200px"><?php  echo $deptGroup;	?>
 			<td><?php echo html::a($this->createLink('kevindept', 'deptview', "id=$deptID"), "查看","data-toggle='modal'");
 				echo html::a($this->createLink('kevindept', 'deptedit', "id=$deptID"), "编辑","data-toggle='modal'");
 				echo html::a($this->createLink('kevindept', 'deptdelete', "id=$deptID"), "删除", " data-toggle='modal'");

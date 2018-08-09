@@ -19,7 +19,7 @@
             <table align='center' class='table table-form'>
                 <tr>
                     <th class='w-80px'><?php echo $lang->kevinuser->deptParent;?></th>
-                    <td><div class="required required-wrapper" style="line-height: 30px;padding-left: 35px;"></div><?php echo html::select('parent', $optionMenu, isset($createNew)?$dept->id:(isset($dept->parent)?$dept->parent:''), "class='form-control chosen'");?></td>
+                    <td><div  style="line-height: 30px;padding-left: 35px;"></div><?php echo html::select('parent', $optionMenu, isset($createNew)?$dept->id:(isset($dept->parent)?$dept->parent:''), "class='form-control chosen'");?></td>
                 </tr>
                 <tr>
                     <th class='w-80px'><?php echo $lang->kevinuser->deptName;?></th>
@@ -43,7 +43,7 @@
                 </tr>
 				<tr>
                     <th colspan="1"><?php echo $lang->kevinuser->order;?></th>
-                    <td colspan="3"><div class="required required-wrapper" style="line-height: 30px;padding-left: 35px;"></div><?php echo html::input('order', isset($createNew)?'':(!empty($dept->order) ? $dept->order : ''), "class='form-control' placeholder='" . $lang->kevinuser->orderPlaceholder . "'");?></td>
+                    <td colspan="3"><div style="line-height: 30px;padding-left: 35px;"></div><?php echo html::input('order', isset($createNew)?'':(!empty($dept->order) ? $dept->order : ''), "class='form-control' placeholder='" . $lang->kevinuser->orderPlaceholder . "'");?></td>
                 </tr>
                 <tr><th></th><td><?php echo html::submitButton() . html::backButton();?></td></tr>
             </table>

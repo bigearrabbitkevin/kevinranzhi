@@ -62,7 +62,7 @@
       <caption class='text-left text-muted'><?php echo $lang->kevinuser->accountInfo;?></caption>
       <tr>
         <th class='w-90px'><?php echo $lang->kevinuser->account;?></th>
-        <td class='w-p40'><?php echo html::input('account', $user->account, "class='form-control' autocomplete='off' disabled");?></td>
+        <td class='w-p40'><?php echo html::input('account', $user->account, "class='form-control' autocomplete='off' readonly");?></td>
         <th class='w-90px'><?php echo $lang->kevinuser->email;?></th>
         <td>
           <?php echo html::input('email', $user->email, "class='form-control'");?>
