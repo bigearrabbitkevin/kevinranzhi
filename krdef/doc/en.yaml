@@ -1,0 +1,29 @@
+---
+name: Kevin tools app for ranzhi
+code: krdef
+type: extension
+copyright: >
+  Kevin Co,
+site: 
+author: 'Kevin<3301647@qq.com>'
+abstract: Kevin app for Ranzhi.
+desc: >
+  Kevin app for Ranzhi. from kevin plugin for zentao.
+install: |
+  1. Install through the buildin extension manager.
+license: |
+  Kevin
+releases:
+  1.0:
+    ranzhi:
+      compatible: 4.6.1
+      incompatible:
+    charge: kevin
+    date: 2018-4-26
+    conflicts: null
+    depends: null
+    license: ZPL
+    changelog: 1. 初始化
+    ranzhico:
+      compatible: all
+      incompatible:
