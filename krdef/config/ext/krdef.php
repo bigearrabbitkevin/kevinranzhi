@@ -4,7 +4,7 @@ $config->krdef->version = '1.0.0';
 $config->krdef->key     = '88888888888888888888888888888888'; //Set a 32 byte string as your key.
 
 define('TABLE_KEVIN_REMOTE', '`' . 'kv_remote`');
-define('TABLE_KEVIN_BOOK', '`' . 'kv_book`');
+define('TABLE_KEVIN_BOOK', '`' . 'eps_book`');
 
 $config->objectTables['kevinremote'] = TABLE_KEVIN_REMOTE;
 $config->objectTables['book'] = TABLE_KEVIN_BOOK;

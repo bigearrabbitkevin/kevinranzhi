@@ -7,10 +7,10 @@ if(!isset($lang->menu)) $lang->menu = new stdclass();
 if(!isset($lang->menu->krdef)) $lang->menu->krdef = new stdclass();
 
 //common的链接，必须有4段，3个|分开，可以为空
-$lang->menu->kvr->kevinremote	= '远程唤醒|kevinremote|index|';
+$lang->menu->krdef->kevinremote	= '远程唤醒|kevinremote|index|';
 
 //following is memuorder
-$lang->kvr->menuOrder[50] = 'kevinremote';
+$lang->krdef->menuOrder[50] = 'kevinremote';
 
 //------------ sub plugin menus
 //kevinremote
