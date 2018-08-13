@@ -6,13 +6,13 @@ $lang->app->name ='手册';
 if(!isset($lang->menu)) $lang->menu = new stdclass();
 if(!isset($lang->menu->krbook)) $lang->menu->krbook = new stdclass();
 //common的链接，必须有4段，3个|分开，可以为空
-$lang->menu->krbook->kevinbook  =  '手册|kevinbook|read|';
+$lang->menu->krbook->book  =  '帮助手册|book|read|';
 
-if(!isset($lang->kevinbook)) $lang->kevinbook = new stdclass();
-if(!isset($lang->kevinbook->menu)) $lang->kevinbook->menu = new stdclass();
-$lang->kevinbook->menu->admin       =  array('link' => '手册列表|kevinbook|admin|', 'alias' => 'admin,index,create,view,edit,batchEdit');
-$lang->kevinbook->menu->read       =  array('link' => '查看手册|kevinbook|read|', 'alias' => 'read');
+if(!isset($lang->book)) $lang->book = new stdclass();
+if(!isset($lang->book->menu)) $lang->book->menu = new stdclass();
+$lang->book->menu->read       =  array('link' => '查看|book|read|', 'alias' => 'read');
+$lang->book->menu->admin       =  array('link' => '编辑|book|admin|', 'alias' => 'admin,index,create,view,edit,batchEdit');
 //following is memuorder
-$lang->krbook->menuOrder[5] = 'kevinbook';
+$lang->krbook->menuOrder[5] = 'book';
 
-$lang->kevinbook->menuOrder[5]  = 'admin';
+$lang->book->menuOrder[5]  = 'admin';

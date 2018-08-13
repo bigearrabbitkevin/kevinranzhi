@@ -1,8 +1,8 @@
 <?php
-class kevinbookModel extends model
+class bookModel extends model
 {
     /**
-     * Get a kevinbook by id or alias.
+     * Get a book by id or alias.
      *
      * @param  string|int $id   the id can be the number id or the alias.
      * @access public
@@ -225,8 +225,8 @@ class kevinbookModel extends model
         $catalogLink = commonModel::hasPriv('book', 'catalog') ? html::a(helper::createLink('book', 'catalog', "nodeID=$node->id"), $this->lang->book->catalog) : '';
         $moveLink    = commonModel::hasPriv('book', 'sort') ? html::a('javascript:;', "<i class='icon-move'></i>", "class='sort sort-handle'") : '';
 
-        if($node->type == 'article') $previewLink = commonModel::hasPriv('book', 'read') ? html::a($this->loadModel('article')->createPreviewLink($node->id, '', 'book'), $this->lang->preview, "target='_blank'") : '';
-
+       //没有$previewLink函数 if($node->type == 'article') $previewLink = commonModel::hasPriv('book', 'read') ? html::a($this->loadModel('article')->createPreviewLink($node->id, '', 'book'), $this->lang->preview, "target='_blank'") : '';
+        $previewLink = '';
         $childrenHtml = '';
         if($children)
         {
@@ -365,8 +365,9 @@ class kevinbookModel extends model
         $node->origins = $this->dao->select('id, type, alias, title, `keywords`, summary, content')->from(TABLE_KEVIN_BOOK)->where('id')->in($node->path)->orderBy('grade')->fetchAll('id');
         $node->book    = current($node->origins);
         $node->files   = $this->loadModel('file')->getByObject('book', $nodeID);
-        $node->content = $replaceTag ? $this->loadModel('tag')->addLink($node->content) : $node->content;
-        
+        //没有addlink函数：$node->content = $replaceTag ? $this->loadModel('tag','sys')->addLink($node->content) : $node->content;
+        $node->content = $node->content;
+
         return $node;
     }
 

@@ -3,9 +3,9 @@
 /* krdef */
 $lang->appModule->krdef	 = array();
 $lang->appModule->kvr[] = 'kevinremote';
-$lang->appModule->kvr[] = 'kevinbook';
+$lang->appModule->kvr[] = 'book';
 $lang->moduleOrder[]	 = 'kevinremote';
-$lang->moduleOrder[]	 = 'kevinbook';
+$lang->moduleOrder[]	 = 'book';
 
 //kevinremote
 $lang->resource->kevinremote		 = new stdclass();
@@ -25,12 +25,12 @@ $lang->kevinremote->methodOrder[25] = 'batchEdit';
 $lang->kevinremote->methodOrder[30] = 'batchDelete';
 $lang->kevinremote->methodOrder[35] = 'wakeup';
 
-/* kevinbook module. */
-$lang->resource->kevinbook = new stdclass();
-$lang->resource->kevinbook->admin     = 'admin';
-$lang->resource->kevinbook->catalog   = 'catalog';
-$lang->resource->kevinbook->create    = 'create';
-$lang->resource->kevinbook->edit      = 'edit';
-$lang->resource->kevinbook->sort      = 'sort';
-$lang->resource->kevinbook->delete    = 'delete';
+/* book module. */
+$lang->resource->book = new stdclass();
+$lang->resource->book->admin     = 'admin';
+$lang->resource->book->catalog   = 'catalog';
+$lang->resource->book->create    = 'create';
+$lang->resource->book->edit      = 'edit';
+$lang->resource->book->sort      = 'sort';
+$lang->resource->book->delete    = 'delete';
 

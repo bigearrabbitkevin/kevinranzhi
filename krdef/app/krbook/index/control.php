@@ -24,6 +24,6 @@ class index extends control
 
     public function index()
     {
-        $this->locate($this->createLink('kevinbook', 'read'));
+        $this->locate($this->createLink('book', 'read'));
     }
 }
