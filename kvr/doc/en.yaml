@@ -3,7 +3,7 @@ name: Kevin app for ranzhi
 code: kvr
 type: extension
 copyright: >
-  Kevin Co,
+  Kevin,
 site: 
 author: 'Kevin<3301647@qq.com>'
 abstract: Kevin app for Ranzhi.
@@ -14,12 +14,12 @@ install: |
 license: |
   Kevin
 releases:
-  1.0:
+  1.1:
     ranzhi:
-      compatible: 4.6.1
+      compatible: 4.7
       incompatible:
     charge: kevin
-    date: 2018-4-26
+    date: 2018-8-14
     conflicts: null
     depends: null
     license: ZPL

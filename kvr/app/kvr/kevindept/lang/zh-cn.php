@@ -35,6 +35,10 @@ $lang->kevindept->deptset         = "部门指定";
 $lang->kevindept->deletedeptuser  = "删除部门用户";
 $lang->kevindept->synccategory    = "同步部门分类";
 
+$lang->kevindept->code   = "代码";
+$lang->kevindept->depart = "部门";
+$lang->kevindept->search = "部门模糊搜索";
+
 $lang->kevindept->confirmDelete = " 您确定删除该部门吗？";
 $lang->kevindept->successSave   = " 修改成功。";
 

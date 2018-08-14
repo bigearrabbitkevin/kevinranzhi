@@ -502,6 +502,7 @@ class kevindeptModel extends model {
 		} else {
 			$path		 = !empty($filter['path']) ? "%," . $filter['path'] . ",%" : '';
 			$manager = $filter['manager'];
+			$name = isset($filter['name'])?$filter['name']:NULL;
 			$deptlist	 = $this->dao->select('a.id,a.name,a.parent, a.path, a.order, a.manager, a.email, a.code,a.group, b.name as parentName, c.realname')
 				->from(TABLE_DEPT)->alias('a')
 				->leftJoin(TABLE_DEPT)->alias('b')->on('a.parent=b.id')
@@ -513,6 +514,7 @@ class kevindeptModel extends model {
 				->beginIF(!empty($filter['manager']))->andWhere('a.manager')->like("%$manager%")->FI()
 				->beginIF(!empty($filter['group']))->andWhere('a.group')->ne('')->FI()
 				->beginIF(!empty($filter['path']))->andWhere('a.path')->like($path)->FI()
+				->beginIF(!empty($name))->andWhere('a.name')->like('%'.$name.'%')->FI()
 				->orderBy($orderBy)
 				->page($pager)
 				->fetchAll('id');
@@ -600,14 +602,11 @@ class kevindeptModel extends model {
 	 * @return array
 	 */
 	public function getdeptParents() {
-		$parentlist = $this->dao->select('DISTINCT parent')->from(TABLE_DEPT)
-			->fetchPairs();
-		$arr        = $this->dao->select('id,name')->from(TABLE_DEPT)
-			->where('id')->in($parentlist)
+		$arr = $this->dao->select('id,name')->from(TABLE_DEPT)
 			->orderBy('id')
 			->fetchPairs();
 
-		return array(0 => 'ALL') + $arr;
+		return array(0 => '') + $arr;
 
 	}
 

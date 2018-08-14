@@ -4,6 +4,10 @@
             <th class="nobr w-20px"><?php echo $lang->kevinuser->dept;?></th>
             <td style="max-width:160px"><?php echo html::select("path", $deptParents, $path,"class='form-control chosen'");?></td>
         </tr>
+	    <tr>
+		    <th class="nobr w-20px"><?php echo $lang->kevindept->depart;?></th>
+		    <td style="max-width:160px"><?php echo html::input("name", $name, "class='form-control' placeholder ={$lang->kevindept->search}");?></td>
+	    </tr>
         <tr>
             <th class="nobr w-20px"><?php echo $lang->kevinuser->manager;?></th>
             <td style="max-width:160px"><?php echo html::select("manager", $userPairs, $manager,"class='form-control chosen'");?></td>

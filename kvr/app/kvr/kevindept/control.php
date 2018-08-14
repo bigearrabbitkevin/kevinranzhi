@@ -44,10 +44,10 @@ class kevindept extends control {
 	 * @return void
 	 */
 	public function browse($deptID = 1) {
-		$parentDepts             = $this->kevindept->getParents($deptID);
-		$this->view->title       = $this->lang->kevindept->manage.$this->lang->colon.$this->app->company->name;
-		$this->view->position[]  = $this->lang->kevindept->manage;
-		$this->view->deptID      = $deptID;
+		$parentDepts            = $this->kevindept->getParents($deptID);
+		$this->view->title      = $this->lang->kevindept->manage.$this->lang->colon.$this->app->company->name;
+		$this->view->position[] = $this->lang->kevindept->manage;
+		$this->view->deptID     = $deptID;
 //		$this->view->depts       = $this->kevindept->getTreeMenu($rootDeptID = 0, array('deptmodel', 'createManageLink'));
 		$this->view->parentDepts = $parentDepts;
 		$this->view->sons        = $this->kevindept->getSons($deptID);
@@ -112,6 +112,7 @@ class kevindept extends control {
 				$this->session->set('deptdeleted', '');
 			}
 			if (isset($_POST['path'])) $this->session->set('deptpath', $_POST['path']);
+			if (isset($_POST['name'])) $this->session->set('name', $_POST['name']);
 
 		}
 
@@ -133,6 +134,10 @@ class kevindept extends control {
 
 		if ($this->session->manager) {
 			$manager = $filter['manager'] = $this->session->manager;
+		}
+
+		if ($this->session->name) {
+			$name = $filter['name'] = $this->session->name;
 		}
 
 		if ($this->session->group) {
@@ -172,10 +177,12 @@ class kevindept extends control {
 		$this->view->deptParent = $this->session->deptParent;
 		$this->view->deptGroup  = $this->session->deptGroup;
 		$this->view->deptList   = $deptList;
+		$this->view->deptTitle  = $this->kevindept->getDept($this->session->deptID);
 
 		$this->view->path       = $path;
 		$this->view->grade      = isset($grade) ? $grade : '';
 		$this->view->manager    = isset($manager) ? $manager : '';
+		$this->view->name       = isset($name) ? $name : '';
 		$this->view->group      = isset($group) ? $group : '';
 		$this->view->deleted    = isset($deleted) ? $deleted : '';
 		$this->view->pager      = $pager;
@@ -257,7 +264,7 @@ class kevindept extends control {
 	 * @access public
 	 * @return void
 	 */
-	public function deptcreate($id = '',$createNew =false) {
+	public function deptcreate($id = '', $createNew = false) {
 		if (!empty($_POST)) {
 			$deptID = $this->kevindept->deptCreate();
 			if (dao::isError()) die(js::error(dao::getError()));
@@ -269,7 +276,7 @@ class kevindept extends control {
 		$users                  = $this->kevindept->getPairs('noletter|noclosed');
 		$this->view->optionMenu = $this->kevindept->getOptionMenu();
 		$this->view->modelName  = 'deptcreate';
-		if ($createNew) $this->view->createNew=true;
+		if ($createNew) $this->view->createNew = true;
 		$this->view->users      = $users;
 		$this->view->groups     = $this->loadModel('group')->getPairs();
 		$this->view->func       = 'create';
@@ -318,7 +325,7 @@ class kevindept extends control {
 					$this->action->logHistory($actionID, $changes);
 				}
 			}
-			if (dao::isError()) die($this->send(array('result'=>'fail','message'=>dao::getError())));
+			if (dao::isError()) die($this->send(array('result' => 'fail', 'message' => dao::getError())));
 			die(js::alert($this->lang->kevinuser->successSave).js::locate(inLink('deptlist')));
 		}
 		$dept                   = $this->kevindept->getById($deptID);

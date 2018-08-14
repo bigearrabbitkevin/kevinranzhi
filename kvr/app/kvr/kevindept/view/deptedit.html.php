@@ -11,7 +11,6 @@
  */
 ?>
 <?php include '../../common/view/header.modal.html.php';?>
-<?php js::set('holders', $lang->user->placeholder);?>
 
 <div class='container mw-700px'>
     <div class="main" style="min-height: 450px;">

@@ -21,7 +21,6 @@ js::set('confirmDelete', $lang->kevinuser->confirmDelete);
 $lockedSeconds = $this->config->kevinuser->lockMinutes * 60;
 $nowTime       = time();
 $longLockTime  = '2030-01-01 00:00:00';
-
 ?>
 <div id='menuActions'>
   <?php commonModel::printLink('kevinuser', 'create', "dept=$deptID", '<i class="icon-plus"></i> ' . $this->lang->kevinuser->create, "id='createButton' class='btn btn-primary' data-toggle='modal'");?>
@@ -34,7 +33,7 @@ $longLockTime  = '2030-01-01 00:00:00';
 		<?php echo html::a('###', "<i class='icon-caret-left'></i>", "class='side-btn side-handle'") ?>
 		<div class='side-body'>
 			<div class='panel panel-sm'>
-				<div class='panel-heading nobr'><?php echo html::icon($lang->icons['company']); ?>
+				<div class='panel-heading nobr'>
 					<strong><?php echo $lang->dept->common; ?></strong></div>
 				<div class='panel-body'>
 					<div id='treeMenuBox'><?php echo $deptTree;?></div>

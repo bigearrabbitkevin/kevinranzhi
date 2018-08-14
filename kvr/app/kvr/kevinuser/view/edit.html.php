@@ -15,9 +15,9 @@
 <div class='container mw-800px'>
   <div id='titlebar'>
     <div class='heading'>
-      <span class='prefix' title='USER'><?php echo html::icon($lang->icons['user']);?> <strong><?php echo $user->id;?></strong></span>
+      <span class='prefix' title='USER'> <strong><?php echo $user->id;?></strong></span>
       <strong><?php echo $user->realname;?> (<small><?php echo $user->account;?></small>)</strong>
-      <small class='text-muted'> <?php echo $lang->kevinuser->edit;?> <?php echo html::icon($lang->icons['edit']);?></small>
+      <small class='text-muted'> <?php echo $lang->kevinuser->edit;?> </small>
 
     </div>
   </div>
@@ -127,5 +127,4 @@
 		$('#userform').attr('action', createLink('kevinuser', 'edit', 'userID=' + userID));
 	}
 </script>
-<?php js::set('passwordStrengthList', $lang->kevinuser->passwordStrengthList)?>
 <?php include '../../../sys/common/view/footer.modal.html.php';?>

@@ -885,7 +885,7 @@ class kevinuserModel extends model {
 		
 		$this->dao->update(TABLE_USER)->data($user)
 			->autoCheck()
-			->batchCheck($this->config->user->edit->requiredFields, 'notempty')
+			->batchCheck($this->config->kevinuser->edit->requiredFields, 'notempty')
 			->check('account', 'unique', "id != '$userID'")
 			->check('account', 'account')
 			->checkIF($this->post->email != false, 'email', 'email')

@@ -85,5 +85,4 @@
 		</table>
 	</form>
 </div>
-<?php js::set('passwordStrengthList', $lang->kevinuser->passwordStrengthList)?>
 <?php include '../../common/view/footer.modal.html.php';?>

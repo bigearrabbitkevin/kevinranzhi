@@ -11,7 +11,6 @@
  */
 ?>
 <?php include '../../common/view/header.modal.html.php';?>
-<?php include '../../common/view/datepicker.html.php';?>
 <style>
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
         cursor: not-allowed;
@@ -65,7 +64,6 @@
                 <tr><th></th><td><?php echo html::backButton();?></td></tr>
             </table>
         </fieldset>
-<?php include '../../common/view/action.html.php';?>
     </div>
 
 </div>
