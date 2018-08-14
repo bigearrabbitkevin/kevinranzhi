@@ -12,7 +12,6 @@
  */
 ?>
 <?php include '../../common/view/header.html.php';?>
-<?php include './side.html.php';?>
 <style>
 	.w-p40 {
 		width: 40%;

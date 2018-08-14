@@ -7,10 +7,6 @@
           <li data-idx='1' data-id="<?php echo $bookID;?>"><?php echo html::a($this->createLink('book', 'admin', "bookID=$bookID"), $bookTitle);?></li>
           <?php endforeach;?>
         </ul>
-        <div class='text-right'>
-          <?php commonModel::printLink('book', 'create', '', $lang->book->create);?>
-          <?php commonModel::printLink('book', 'setting', '', $lang->book->setting);?>
-        </div>
       </div>
     </div>
   </div>

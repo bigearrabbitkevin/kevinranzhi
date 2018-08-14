@@ -1,4 +1,3 @@
-<?php if(!defined("RUN_MODE")) die();?>
 <?php
 /**
  * The edit book view file of book of chanzhiEPS.

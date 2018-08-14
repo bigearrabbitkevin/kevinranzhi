@@ -1,4 +1,17 @@
 <?php
+/**
+ * The control file of book module of chanzhiEPS.
+ *
+ * @copyright   Copyright 2009-2015 青岛易软天创网络科技有限公司(QingDao Nature Easy Soft Network Technology Co,LTD, www.cnezsoft.com)
+ * @license     ZPLV1.2 (http://zpl.pub/page/zplv12.html)
+ * @author      Tingting Dai<daitingting@xirangit.com>
+ * @package     book
+ * @version     $Id$
+ * @link        http://www.chanzhi.org
+ */
+?>
+
+<?php
 
 class book extends control
 {
@@ -46,96 +59,75 @@ class book extends control
 
     /**
      * Browse a node of a book.
-     * 
-     * @param  int    $nodeID 
+     *
+     * @param  int    $nodeID
      * @access public
      * @return void
      */
-    public function browse($nodeID)
-    {
-        $node = $this->book->getNodeByID($nodeID);
-        if($node)
-        {
-            $nodeID = $node->id;
-            $book = $this->book->getBookByNode($node);
-            if(($this->config->book->chapter == 'left' or $this->config->book->fullScreen or $this->get->fullScreen) and $this->app->clientDevice == 'desktop')
-            {
-                $families = $this->dao->select('id,parent,type,`order`')->from(TABLE_KEVIN_BOOK)
-                    ->where('path')->like(",{$nodeID},%")
-                    ->andWhere('addedDate')->le(helper::now())
-                    ->andWhere('status')->eq('normal')
-                    ->orderBy('`order`')
-                    ->fetchGroup('parent', 'id');
-                
-                $allNodes = $this->dao->select('*')->from(TABLE_KEVIN_BOOK)
-                    ->where('path')->like("%,{$nodeID},%")
-                    ->andWhere('addedDate')->le(helper::now())
-                    ->andWhere('status')->eq('normal')
-                    ->fetchAll('id');
-                $articles = $this->book->getArticleIdList($nodeID, $families, $allNodes);
-                
-                if($articles)
-                {
-                    $articles  = explode(',', $articles);
-                    $articleID = current($articles);
-                    $article   = zget($allNodes, $articleID);
-                    $this->locate(inlink('read', "articleID=$articleID", "book=$book->alias&node=$article->alias") . ($this->get->fullScreen ? "?fullScreen={$this->get->fullScreen}" : ''));
-                }
-            }
-
-            $serials = $this->book->computeSN($book->id);
-
-            $this->view->title      = $book->title;
-            $this->view->keywords   = trim(trim($node->keywords . ' - ' . $book->keywords), '-');
-            $this->view->node       = $node;
-            $this->view->book       = $book;
-            $this->view->serials    = $serials;
-            $this->view->books      = $this->book->getBookList();
-            $this->view->catalog    = $this->book->getFrontCatalog($node->id, $serials);
-            $this->view->allCatalog = $this->book->getFrontCatalog($book->id, $serials);
-            $this->view->mobileURL  = helper::createLink('book', 'browse', "nodeID=$node->id", $book->id == $node->id ? "book=$book->alias" : "book=$book->alias&node=$node->alias", 'mhtml');
-            $this->view->desktopURL = helper::createLink('book', 'browse', "nodeID=$node->id", $book->id == $node->id ? "book=$book->alias" : "book=$book->alias&node=$node->alias", 'html');
+    public function browse($nodeID) {
+        $node			 = $this->book->getNodeByID($nodeID);
+        $isShowSubBook	 = '';
+        $isShowContent	 = '';
+        if (!empty($_POST)) {
+            $isShowSubBook	 = $_POST['postSubBookCheckBox'];
+            $isShowContent	 = $_POST['postContentCheckBox'];
+            $this->session->set('NotShowSubBook', !$isShowSubBook);
+            $this->session->set('NotShowContent', !$isShowContent);
+        } else {
+            $isShowSubBook	 = !$this->session->NotShowSubBook;
+            $isShowContent	 = !$this->session->NotShowContent;
         }
+        $this->book->isShowSubBook	 = $isShowSubBook;
+        $this->book->isShowContent	 = $isShowContent;
+        $this->book->fullScreen = ($this->get->fullScreen) ? "?fullScreen=1" : "";
+        $this->book->getDetailCatalog($node->id, $this->view);
         $this->display();
     }
 
     /**
      * Read an article.
-     * 
-     * @param  int    $articleID 
+     *
+     * @param  int    $articleID
      * @access public
      * @return void
      */
-    public function read($articleID = 1)
-    {
-    	if(empty($articleID) && isset($_GET['articleID'])) $articleID = $_GET['articleID'];
+    public function read($articleID = 0) {
+        $articleID = (int) $articleID;
+
+        $this->view->id	 = $articleID;
+        if(!$articleID) $this->display();
         $article = $this->book->getNodeByID($articleID);
-        if(!$article) die($this->fetch('errors', 'index'));
-        $book    = $article->book;
-        $serials = $this->book->computeSN($book->id);
+        if (!$article) die('Can not fine article!');
+        $parent	 = $article->origins[$article->parent];
+        $book	 = $article->book;
         $content = $this->book->addMenu($article->content);
-        
-        if($article->type != 'book')
-        {        
-            $parent  = $article->origins[$article->parent];
-            $this->view->parent      = $parent;
-            $this->view->prevAndNext = $this->book->getPrevAndNext($article);
+        $serials = $this->book->computeSN($book->id);
+
+        $this->view->title		 = $article->title . ' - ' . $book->title;
+        ;
+        $this->view->keywords	 = $article->keywords;
+        $this->view->desc		 = $article->summary;
+        $this->view->article	 = $article;
+        $this->view->content	 = $content;
+
+        $this->view->parent		 = $parent;
+        //$this->view->allCatalog  = $this->book->getFrontCatalog($book->id, $serials);
+        $this->view->prevAndNext = $this->book->getPrevAndNext($article);
+
+        $this->dao->update(TABLE_BOOK)->set('views = views + 1')->where('id')->eq($articleID)->exec();
+        if ($this->get->fullScreen) {
+            $this->book->fullScreen = "?fullScreen=1";
+        } else {
+            $this->view->books				 = $this->book->getBookList();
+            $this->view->book				 = $book;
+            $this->book->fullScreen = "";
+            $this->view->MenuItems			 = $this->book->getSameLevelItem($article->parent);
         }
-        $activeInfoLink = $article->type == 'book' ? 'activeBookInfo' : '';
-        $this->view->bookInfoLink = html::a(inLink('read', "articleID=$book->id", "book=$book->alias&node=$article->alias"), $book->title . $this->lang->book->info, "class = $activeInfoLink");
-        
-        $this->view->title       = $article->title . ' - ' . $book->title;;
-        $this->view->keywords    = trim(trim($article->keywords . ' - ' . $book->keywords), '-');
-        $this->view->desc        = $article->summary;
-        $this->view->article     = $article;
-        $this->view->content     = $content;
-	    $this->view->editor = $this->loadModel('user')->getByAccount($article->editor)->realname;
-	    $this->view->files = $this->loadModel('file')->printFiles($article->files);
-        $this->view->book            = $book;
-        $this->view->allCatalog      = $this->book->getFrontCatalog($book->id, $serials);
-        $this->view->mobileURL       = helper::createLink('book', 'read', "articleID=$article->id", "book=$book->alias&node=$article->alias", 'mhtml');
-        $this->view->desktopURL      = helper::createLink('book', 'read', "articleID=$article->id", "book=$book->alias&node=$article->alias", 'html');
-        $this->view->books           = $this->book->getBookList();
+        //this is for book
+        //$this->view->allCatalog  = $this->book->getFrontCatalog($book->id, $serials);
+        $this->view->mobileURL	 = helper::createLink('book', 'read', "articleID=$article->id", "", 'mhtml') . $this->book->fullScreen;
+        $this->view->desktopURL	 = helper::createLink('book', 'read', "articleID=$article->id", "", 'html') . $this->book->fullScreen;
+        $this->view->node = & $this->view->article;
 
         $this->display();
     }
@@ -283,7 +275,7 @@ class book extends control
         $this->app->loadClass('pager');
         $pager = new pager($recTotal, $recPerPage, $pageID);
 
-        $articles = $this->dao->select('*')->from(TABLE_KEVIN_BOOK)
+        $articles = $this->dao->select('*')->from(TABLE_BOOK)
             ->where(1)
             ->beginIf($searchWord)
             ->andwhere('type', true)->eq('article')

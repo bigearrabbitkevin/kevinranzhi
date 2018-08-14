@@ -12,8 +12,12 @@ $lang->krbook->menuOrder[5] = 'book';
 
 if(!isset($lang->book)) $lang->book = new stdclass();
 if(!isset($lang->book->menu)) $lang->book->menu = new stdclass();
-$lang->book->menu->read       =  array('link' => '查看|book|read|', 'alias' => 'read');
+$lang->book->menu->index       = '手册|book|index|';
+$lang->book->menu->read       =  array('link' => '查看|book|read|', 'alias' => 'read,browse');
 $lang->book->menu->admin       =  array('link' => '后台|book|admin|', 'alias' => 'admin,index,create,view,edit,batchEdit');
+$lang->book->menu->setting       = '设置|book|setting|';
 
-$lang->book->menuOrder[5]  = 'read';
-$lang->book->menuOrder[10]  = 'admin';
+$lang->book->menuOrder[5]  = 'index';
+$lang->book->menuOrder[10]  = 'read';
+$lang->book->menuOrder[15]  = 'admin';
+$lang->book->menuOrder[20]  = 'setting';
