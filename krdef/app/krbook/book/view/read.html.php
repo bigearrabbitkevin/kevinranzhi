@@ -12,7 +12,7 @@
 ?>
 <?php include '../../common/view/header.html.php';?>
 <?php
-if(!$id) die('Cannot find article. Id is Incalid.');
+
 $fullScreen = $this->book->fullScreen;
 if (!empty($this->config->book->fullScreen) or $this->get->fullScreen):
 	?>

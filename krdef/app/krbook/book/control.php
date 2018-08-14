@@ -87,17 +87,15 @@ class book extends control
     /**
      * Read an article.
      *
-     * @param  int    $articleID
+     * @param  int    $articleID if empty means default
      * @access public
      * @return void
      */
-    public function read($articleID = 0) {
-        $articleID = (int) $articleID;
+    public function read($articleID = '') {
 
         $this->view->id	 = $articleID;
-        if(!$articleID) $this->display();
         $article = $this->book->getNodeByID($articleID);
-        if (!$article) die('Can not fine article!');
+        if (!$article) die('Can not find article!');
         $parent	 = $article->origins[$article->parent];
         $book	 = $article->book;
         $content = $this->book->addMenu($article->content);
@@ -249,6 +247,23 @@ class book extends control
     {
         if($this->book->delete($nodeID)) $this->send(array('result' => 'success'));
         $this->send(array('result' => 'fail', 'message' => dao::getError()));
+    }
+
+    /**
+     * get book by project
+     *
+     * @access public
+     * @return void
+     */
+    public function project($id = 0)
+    {
+        if(!$id) die('ID is wrong!');
+        $item = $this->dao->select('a.id')->from(TABLE_BOOK)->alias ('a')
+            ->leftjoin(TABLE_PROJECT)->alias('b')->on('b.nodeID = a.id')
+            ->where('b.id')->eq($id)->fetch();
+        if(!$item) die('can not find project with id = '.$id);
+        $url = helper::createLink('book','browse',"nodeID=$item->id",'html');
+        header("location:$url");//redirect
     }
 
     /**
