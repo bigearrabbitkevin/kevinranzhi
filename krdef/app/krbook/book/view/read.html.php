@@ -134,7 +134,7 @@ if (!empty($this->config->book->fullScreen) or $this->get->fullScreen):
 			</div>
 		</div>
 	<?php endif; ?>
-	<?php include TPL_ROOT . 'common/jplayer.html.php'; ?>
+	<?php //include TPL_ROOT . 'common/jplayer.html.php'; ?>
 <?php endif; ?>
 
 <?php include '../../common/view/footer.html.php';?>

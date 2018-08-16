@@ -10,15 +10,13 @@
  * @link        http://www.chanzhi.org
  */
 ?>
-<?php include '../../common/view/header.html.php';?>
 <?php
 $fullScreen		 = $this->book->fullScreen;
-if (!empty($this->config->book->fullScreen) or $this->get->fullScreen) include TPL_ROOT . 'common/header.lite.html.php';
-else  include TPL_ROOT . 'common/header.html.php';
-	?>
-<?php js::set('fullScreen', (!empty($this->config->book->fullScreen) or $this->get->fullScreen) ? 1 : 0);?>
+if (!empty($this->config->book->fullScreen) or $this->get->fullScreen) include '../../../sys/common/view/header.lite.html.php';
+else  include '../../common/view/header.html.php';
 
-<?php
+js::set('fullScreen', ($fullScreen) ? 1 : 0);
+
 $stateSubBook	 = ('true' == $this->book->isShowSubBook) ? " checked ='checked'" : "";
 $stateContent		 = ('true' == $this->book->isShowContent) ? " checked ='checked'" : "";
 ?>

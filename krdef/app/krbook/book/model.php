@@ -26,7 +26,7 @@ class bookModel extends model
             $parentid	 = $path[count($path) > 1 ? count($path) - 2 : 0];
 
             $thisView->title	 = $book->title;
-            $thisView->keywords	 = trim($node->keywords . ' ' . $this->config->site->keywords);
+            $thisView->keywords	 = trim($node->keywords );
             $thisView->node		 = $node;
             $thisView->book		 = $book;
             $thisView->parent	 = $node->origins[$parentid]; //$this->getParentTypeByNodeID($node);
@@ -1015,7 +1015,7 @@ class bookModel extends model
      */
     public function printPositionBar($origins) {
         echo '<ul class="breadcrumb">';
-        echo '<li>' . "<span class='breadcrumb-title'>" . $this->lang->currentPos . $this->lang->colon . '</span>' . html::a($this->config->homeRoot, $this->lang->home) . '</li>';
+        echo '<li>' . "<span class='breadcrumb-title'>" . $this->lang->currentPos . $this->lang->colon . '</span>' . '</li>';
         $link	 = '<li>' . html::a(helper::createLink('book', 'index'), $this->lang->bookHome) . '</li>';
         $book	 = current($origins);
         foreach ($origins as $node) {
