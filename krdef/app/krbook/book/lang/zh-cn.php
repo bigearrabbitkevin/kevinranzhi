@@ -1,4 +1,3 @@
-<?php if(!defined("RUN_MODE")) die();?>
 <?php
 $lang->book->common       = '手册';
 $lang->book->list         = '手册列表';
@@ -72,3 +71,6 @@ $lang->book->confirmDelete = "<span class='text-danger'>此操作将删除该手
 $lang->book->note = new stdclass();
 $lang->book->note->addedDate = '可以延迟到选定的时间发布。';
 $lang->book->note->link      = '请输入链接，可以是站外链接';
+
+//-----add param by kevin
+$lang->book->alias = '别名';

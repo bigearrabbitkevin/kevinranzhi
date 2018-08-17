@@ -12,7 +12,7 @@
 ?>
 <?php include '../../common/view/header.html.php';?>
 <?php include '../../../sys/common/view/chosen.html.php';?>
-<?php include '../../../sys/common/view/ueditor.html.php';?>
+<?php include '../../../sys/common/view/kindeditor.html.php';?>
 <?php include '../../../sys/common/view/datepicker.html.php';?>
 <?php 
 $path = explode(',', $node->path);
@@ -89,7 +89,7 @@ $linkChecked = $node->link ? checked : '';
               <?php endif;?>
               <div class='input-group text-1'>
                 <span class='input-group-addon'>http://<?php echo $this->server->http_host . $config->webRoot?>book/id@</span>
-                <?php echo html::input('alias', $node->alias, "class='form-control' placeholder='{$lang->alias}'");?>
+                <?php echo html::input('alias', $node->alias, "class='form-control' placeholder='{$lang->book->alias}'");?>
                 <span class='input-group-addon'>.html</span>
               </div>
             </td>

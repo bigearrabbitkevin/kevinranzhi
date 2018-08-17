@@ -1,4 +1,4 @@
-<?php if(!defined("RUN_MODE")) die();?>
+
 <?php
 /**
  * The setting view file of book module of Chanzhi.

@@ -1,4 +1,4 @@
-<?php if(!defined("RUN_MODE")) die();?>
+
 <?php
 $lang->book->common       = '手冊';
 $lang->book->list         = '手冊列表';
@@ -71,3 +71,6 @@ $lang->book->confirmDelete = "<span class='text-danger'>此操作將刪除該手
 $lang->book->note = new stdclass();
 $lang->book->note->addedDate = '可以延遲到選定的時間發佈。';
 $lang->book->note->link      = '請輸入連結，可以是站外連結';
+
+//-----add param by kevin
+$lang->book->alias = '别名';

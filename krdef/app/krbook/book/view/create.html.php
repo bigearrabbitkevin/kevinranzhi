@@ -1,4 +1,4 @@
-<?php if(!defined("RUN_MODE")) die();?>
+
 <?php
 /**
  * The create book view file of book of chanzhiEPS.
@@ -12,7 +12,7 @@
  */
 ?>
 <?php include '../../common/view/header.html.php'; ?>
-<?php include '../../../sys/common/view/ueditor.html.php';?>
+<?php include '../../../sys/common/view/kindeditor.html.php';?>
 <?php include './side.html.php';?>
 
 <div class='col-md-10'>

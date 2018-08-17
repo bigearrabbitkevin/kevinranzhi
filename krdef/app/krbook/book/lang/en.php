@@ -1,4 +1,4 @@
-<?php if(!defined("RUN_MODE")) die();?>
+
 <?php
 $lang->book->common       = 'Book';
 $lang->book->list         = 'Books';
@@ -71,3 +71,6 @@ $lang->book->confirmDelete = "<span class='text-danger'>You will delete all chap
 $lang->book->note = new stdclass();
 $lang->book->note->addedDate = 'You can publish it on selected date.';
 $lang->book->note->link      = 'Enter the link here. External link is OK.';
+
+//-----add param by kevin
+$lang->book->alias = 'alias';

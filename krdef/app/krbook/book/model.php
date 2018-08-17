@@ -597,8 +597,8 @@ class bookModel extends model
             ->add('type', 'book')
             ->add('addedDate', $now)
             ->add('editedDate', $now)
-            ->setForce('alias',    seo::unify($this->post->alias, '-', true))
-            ->setForce('keywords', seo::unify($this->post->keywords, ','))
+            ->setForce('alias',    helper::unify($this->post->alias, '-', true))
+            ->setForce('keywords', helper::unify($this->post->keywords, ','))
             ->get();
 
         $this->dao->insert(TABLE_BOOK)
@@ -659,8 +659,8 @@ class bookModel extends model
             $node->addedDate = $this->post->addedDate[$key];
             $node->status    = $this->post->status[$key];
             $node->order     = $this->post->order[$key];
-            $node->alias     = seo::unify($node->alias, '-', true);
-            $node->keywords  = seo::unify($node->keywords, ',');
+            $node->alias     = helper::unify($node->alias, '-', true);
+            $node->keywords  = helper::unify($node->keywords, ',');
 
             if($mode == 'new')
             {
@@ -711,14 +711,14 @@ class bookModel extends model
         $chapterAlias = array();
         foreach($this->post->type as $key => $type)
         {
-            if($type == 'chapter') $chapterAlias[] = seo::unify($this->post->alias[$key], '-', true);
+            if($type == 'chapter') $chapterAlias[] = helper::unify($this->post->alias[$key], '-', true);
         }
         $chapterAlias = array_count_values($chapterAlias);
 
         foreach($this->post->title as $key => $title)
         {
             $type  = $this->post->type[$key];
-            $alias = seo::unify($this->post->alias[$key], '-', true);
+            $alias = helper::unify($this->post->alias[$key], '-', true);
             $mode  = $this->post->mode[$key];
 
             if($type == 'article' or $alias == '' or $title == '') continue;
@@ -755,8 +755,8 @@ class bookModel extends model
             ->add('id',            $nodeID)
             ->add('editor',        $this->app->user->account)
             ->add('editedDate',    helper::now())
-            ->setForce('keywords', seo::unify($this->post->keywords, ','))
-            ->setForce('alias',    seo::unify($this->post->alias, '-', true))
+            ->setForce('keywords', helper::unify($this->post->keywords, ','))
+            ->setForce('alias',    helper::unify($this->post->alias, '-', true))
             ->setForce('type',     $oldNode->type)
             ->stripTags('content', $this->config->allowedTags->admin)
             ->get();

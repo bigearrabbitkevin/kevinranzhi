@@ -1,4 +1,4 @@
-<?php if(!defined("RUN_MODE")) die();?>
+
 <?php
 $config->book->require = new stdclass();
 $config->book->require->book = 'title, alias';
