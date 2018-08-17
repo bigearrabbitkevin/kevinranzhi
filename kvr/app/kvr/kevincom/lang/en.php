@@ -1,3 +1,3 @@
 <?php
-$lang->kevincom->common			= 'KEVIN';
+$lang->kevincom->common			= 'Base';
 $lang->kevincom->index			= 'Index';
