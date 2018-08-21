@@ -5,7 +5,10 @@ $lang->book->articles     = '文档导航';
 $lang->book->backtolist   = '返回手册列表';
 
 $lang->book->delete   = '删除';
+$lang->book->read   = '阅读';
 $lang->book->admin      = '手册列表';
+$lang->book->project   = '项目';
+$lang->book->browse   = '查看章节';
 $lang->book->info       = '手册介绍';
 $lang->book->createBook = '添加手册';
 $lang->book->create     = '添加';

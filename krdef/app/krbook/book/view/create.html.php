@@ -38,7 +38,7 @@
               <div class='required required-wrapper'></div>
               <div class='input-group'>
                 <span class='input-group-addon'>http://<?php echo $this->server->http_host . $config->webRoot?>book/</span>
-                <?php echo html::input('alias', '', "class='form-control' placeholder='{$lang->alias}'");?>
+                <?php echo html::input('alias', '', "class='form-control' placeholder='{$lang->book->alias}'");?>
                 <span class='input-group-addon'>.html</span>
               </div>
             </td>

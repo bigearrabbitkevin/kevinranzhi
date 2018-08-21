@@ -57,7 +57,7 @@
             <td><?php echo html::select("type[]", $lang->book->typeList, '', "class='form-control'");?></td>
             <td><?php echo html::input("author[]", $app->user->realname, "class='form-control'");?></td>
             <td><?php echo html::input("title[]", '', "class='form-control'");?></td>
-            <td><?php echo html::input("alias[]", '', "class='form-control' placeholder='{$lang->alias}' title='{$lang->alias}'");?></td>
+            <td><?php echo html::input("alias[]", '', "class='form-control' placeholder='{$lang->book->alias}' title='{$lang->book->alias}'");?></td>
             <td><?php echo html::input("keywords[]", '', "class='form-control'");?></td>
             <td><?php echo html::input("addedDate[]", helper::now(), "class='form-control date'");?></td>
             <td><?php echo html::select("status[]", $lang->book->statusList, 'normal', "class='form-control'");?></td>

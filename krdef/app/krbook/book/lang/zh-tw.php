@@ -7,6 +7,9 @@ $lang->book->backtolist   = '返回手冊列表';
 $lang->book->delete   = 'Delete';
 
 $lang->book->admin      = '手冊列表';
+$lang->book->read   = '阅读文章';
+$lang->book->project   = '项目';
+$lang->book->browse   = '查看章节';
 $lang->book->info       = '手冊介紹';
 $lang->book->createBook = '添加手冊';
 $lang->book->create     = '添加';

@@ -16,7 +16,7 @@ license: |
 releases:
   1.0:
     ranzhi:
-      compatible: 4.6.1
+      compatible: 4.7
       incompatible:
     charge: kevin
     date: 2018-4-26

@@ -31,6 +31,12 @@ $lang->moduleOrder[]	 = 'book';
 
 /* book module. */
 $lang->resource->book = new stdclass();
+$lang->resource->book->index     = 'index';
+$lang->resource->book->read     = 'read';
+$lang->resource->book->browse     = 'browse';
+$lang->resource->book->project     = 'project';
+$lang->resource->book->search     = 'search';
+$lang->resource->book->setting     = 'setting';
 $lang->resource->book->admin     = 'admin';
 $lang->resource->book->catalog   = 'catalog';
 $lang->resource->book->create    = 'create';

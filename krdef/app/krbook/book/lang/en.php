@@ -7,6 +7,9 @@ $lang->book->backtolist   = 'Back';
 $lang->book->delete   = 'Delete';
 
 $lang->book->admin      = 'Books';
+$lang->book->read   = 'Read Article';
+$lang->book->project   = 'project';
+$lang->book->browse   = 'browse Chapter';
 $lang->book->info       = 'Book Info';
 $lang->book->createBook = 'Add Book';
 $lang->book->create     = 'Add Book';
