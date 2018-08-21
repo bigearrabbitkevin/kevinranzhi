@@ -1,11 +1,9 @@
 <?php
 
-/* krdef */
+/* krdef app */
 $lang->appModule->krdef	 = array();
-$lang->appModule->kvr[] = 'kevinremote';
-$lang->appModule->kvr[] = 'book';
+$lang->appModule->krdef[] = 'kevinremote';
 $lang->moduleOrder[]	 = 'kevinremote';
-$lang->moduleOrder[]	 = 'book';
 
 //kevinremote
 $lang->resource->kevinremote		 = new stdclass();
@@ -24,6 +22,12 @@ $lang->kevinremote->methodOrder[20] = 'delete';
 $lang->kevinremote->methodOrder[25] = 'batchEdit';
 $lang->kevinremote->methodOrder[30] = 'batchDelete';
 $lang->kevinremote->methodOrder[35] = 'wakeup';
+
+/* krbook app */
+$lang->appModule->krbook	 = array();
+$lang->appModule->krbook[] = 'book';
+
+$lang->moduleOrder[]	 = 'book';
 
 /* book module. */
 $lang->resource->book = new stdclass();

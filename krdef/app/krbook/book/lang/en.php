@@ -4,6 +4,7 @@ $lang->book->common       = 'Book';
 $lang->book->list         = 'Books';
 $lang->book->articles     = 'Articles';
 $lang->book->backtolist   = 'Back';
+$lang->book->delete   = 'Delete';
 
 $lang->book->admin      = 'Books';
 $lang->book->info       = 'Book Info';

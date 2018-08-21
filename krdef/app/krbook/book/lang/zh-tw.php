@@ -4,6 +4,7 @@ $lang->book->common       = '手冊';
 $lang->book->list         = '手冊列表';
 $lang->book->articles     = '文檔導航';
 $lang->book->backtolist   = '返回手冊列表';
+$lang->book->delete   = 'Delete';
 
 $lang->book->admin      = '手冊列表';
 $lang->book->info       = '手冊介紹';

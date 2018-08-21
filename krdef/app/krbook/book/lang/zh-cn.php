@@ -4,6 +4,7 @@ $lang->book->list         = '手册列表';
 $lang->book->articles     = '文档导航';
 $lang->book->backtolist   = '返回手册列表';
 
+$lang->book->delete   = '删除';
 $lang->book->admin      = '手册列表';
 $lang->book->info       = '手册介绍';
 $lang->book->createBook = '添加手册';
