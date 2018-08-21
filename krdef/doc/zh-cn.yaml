@@ -1,14 +1,14 @@
 ---
-name: Kevin app for ranzhi
+name: Kevin tools for ranzhi
 code: krdef
 type: extension
 copyright: >
-  Kevin Co,
+  Kevin,
 site: 
 author: 'Kevin<3301647@qq.com>'
-abstract: Kevin app for Ranzhi.
+abstract: 手册、远程唤醒等功能
 desc: >
-  Kevin app for Ranzhi. from kevin plugin for zentao.
+  然之插件。 手册、远程唤醒等功能
 install: |
   1. Install through the buildin extension manager.
 license: |
@@ -19,7 +19,7 @@ releases:
       compatible: 4.7
       incompatible:
     charge: kevin
-    date: 2018-4-26
+    date: 2018-8-21
     conflicts: null
     depends: null
     license: ZPL
