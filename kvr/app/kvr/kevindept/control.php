@@ -58,29 +58,6 @@ class kevindept extends control {
 	}
 
 	/**
-	 * Delete a department.
-	 *
-	 * @param  int    $deptID
-	 * @param  string $confirm yes|no
-	 * @access public
-	 * @return void
-	 */
-	public function delete($deptID, $confirm = 'no') {
-		/* Check this kevindept when delete. */
-		$sons  = $this->kevindept->getSons($deptID);
-		$users = $this->kevindept->getUsers($deptID);
-		if ($sons) die(js::alert($this->lang->kevindept->error->hasSons));
-		if ($users) die(js::alert($this->lang->kevindept->error->hasUsers));
-
-		if ($confirm == 'no') {
-			die(js::confirm($this->lang->kevindept->confirmDelete, $this->createLink('kevindept', 'delete', "deptID=$deptID&confirm=yes")));
-		} else {
-			$this->kevindept->delete($deptID);
-			die(js::reload('parent'));
-		}
-	}
-
-	/**
 	 * dept list.
 	 *
 	 * @param  int $recTotal ,$recPerPage,$pageID

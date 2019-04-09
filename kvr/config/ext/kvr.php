@@ -5,3 +5,4 @@ $config->kvr->key     = '88888888888888888888888888888888'; //Set a 32 byte stri
 
 if (!defined('TABLE_USERCONTACT'))  define('TABLE_USERCONTACT',   '`zt_usercontact`');
 if(!defined('TABLE_DEPT')) define('TABLE_DEPT', '`zt_dept`');
+if(!defined('ZENTAO_LOCKED_DATETIME')) define('ZENTAO_LOCKED_DATETIME', '2030-01-01 00-00-00');

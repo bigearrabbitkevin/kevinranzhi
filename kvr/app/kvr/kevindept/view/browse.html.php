@@ -123,10 +123,10 @@ $(function()
                 title: '<?php echo $lang->kevindept->edit ?>',
                 template: '<a data-toggle="tooltip" href="javascript:;"><?php echo $lang->edit?></a>'
             },
-            "delete":
+            "deptdelete":
             {
-                linkTemplate: '<?php echo helper::createLink('kevindept', 'delete', "deptid={0}"); ?>',
-                title: '<?php echo $lang->kevindept->delete ?>',
+                linkTemplate: '<?php echo helper::createLink('kevindept', 'deptdelete', "deptid={0}"); ?>',
+                title: '<?php echo $lang->kevindept->deptdelete ?>',
                 template: '<a data-toggle="tooltip" href="javascript:;"><?php echo $lang->delete?></a>'
             }
         },
@@ -141,7 +141,7 @@ $(function()
                     url: action.linkTemplate.format(item.id)
                 }).trigger('click');
             }
-            else if(action.type === 'delete')
+            else if(action.type === 'deptdelete')
             {
                 window.open(action.linkTemplate.format(item.id), 'hiddenwin');
             }
@@ -164,7 +164,7 @@ $(function()
 
     if(<?php echo commonModel::hasPriv('kevindept', 'updateorder') ? 'false' : 'true' ?>) options.actions["sort"] = false;
     if(<?php echo commonModel::hasPriv('kevindept', 'edit') ? 'false' : 'true' ?>) options.actions["edit"] = false;
-    if(<?php echo commonModel::hasPriv('kevindept', 'delete') ? 'false' : 'true' ?>) options.actions["delete"] = false;
+    if(<?php echo commonModel::hasPriv('kevindept', 'deptdelete') ? 'false' : 'true' ?>) options.actions["deptdelete"] = false;
 
     var $tree = $('#deptTree').tree(options);
 

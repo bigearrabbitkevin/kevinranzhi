@@ -12,7 +12,6 @@
 $lang->kevindept->common      = '部门结构';
 $lang->kevindept->manageChild = "下级部门";
 $lang->kevindept->edit        = "编辑部门";
-$lang->kevindept->delete      = "删除部门";
 $lang->kevindept->parent      = "上级部门";
 $lang->kevindept->manager     = "负责人";
 $lang->kevindept->name        = "部门名称";
