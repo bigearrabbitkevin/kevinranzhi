@@ -46,8 +46,6 @@ var kevin_kendogrid_fileName = '';//输出文件名的 公共变量
 var kevin_kendogrid_dataItem = '';//表格行内数据
 var kevin_kendogrid_toolbar = '';//toolbar
 
-//var kevin_today 在view的页面里面定义,要改为在这里定义，杨海华
-var kevin_today_obj = new Date();                           // 创建 Date 对象。
 var kevin_today = '';//today string
 
 var kevin_ModelWnd; //模态窗口
@@ -59,9 +57,23 @@ var kevin_detailsTemplate;//详细模版
  */
 function kevin_base_initialParam() {
 	kevin_kendogrid_div = $("#grid"); //referrer to grid
-	kevin_today_obj = new Date(); 
-	kevin_today = kevin_today_obj.getYear()+ (kevin_today_obj.getMonth() + 1) + kevin_today_obj.getDate(); // 获取日。
+	kevin_today = kevin_GetTodayStr(); // 具体日期。
 	kevin_kendogrid_fileName = 'Kendo_UI_Grid_Export_' + kevin_today + '.xlsx';
+}
+
+//获得今天日期字符串
+function kevin_GetTodayStr() {
+	 var date = new Date();
+	 var month = date.getMonth() + 1;
+	 var strDate = date.getDate();
+	 if (month >= 1 && month <= 9) {
+			 month = "0" + month;
+		 }
+	 if (strDate >= 0 && strDate <= 9) {
+			strDate = "0" + strDate;
+		 }
+	 var currentDate = date.getFullYear() + '-' + month + '-' + strDate;
+	 return currentDate;
 }
 
 /**
