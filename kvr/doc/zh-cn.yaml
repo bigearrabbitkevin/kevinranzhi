@@ -19,11 +19,11 @@ releases:
       compatible: 4.7
       incompatible:
     charge: kevin
-    date: 2018-8-14
+    date: 2019-06-02
     conflicts: null
     depends: null
     license: ZPL
-    changelog: 1. 初始化
+    changelog: 1. 删除APP，只保留js等级别的信息
     ranzhico:
       compatible: all
       incompatible:
