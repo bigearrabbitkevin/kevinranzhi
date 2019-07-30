@@ -109,6 +109,7 @@ function kevin_CheckJsonReturnData(iData) {
 	}
 
 	if (!(iData.hasOwnProperty("errcode"))) {
+		ret.errcode = 20;
 		ret.errmsg = 'Error! No errcode property in json!';
 		return ret;
 	}
@@ -117,6 +118,7 @@ function kevin_CheckJsonReturnData(iData) {
 		return ret;
 	}
 	if (!(iData.hasOwnProperty("data"))) {
+		ret.errcode = 22;
 		ret.errmsg = 'Error! No Data property in json!';
 		return ret;
 	}
@@ -147,6 +149,7 @@ function kevin_kendogrid_updateGridData() {
 			record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
 		},
 		selectable: "row",
+		filterable: true,
 		groupable: true,
 		sortable: true,
 		pageable: {
@@ -165,4 +168,28 @@ function kevin_kendogrid_updateGridData() {
 			allPages: true//是否导出所有页中的数据
 		}
 	});
+}
+
+//-----------------------------------
+//-获得form的数据，form Post的参数模式.
+//$(iName) : $("#form1")--------------------
+//-----------------------------------
+function kevin_serializeArray(iName) {
+	var d = {};
+	var t = $(iName).serializeArray();
+	$.each(t,function() {
+		if(d.hasOwnProperty(this.name)){
+			//说明是数组
+			if(typeof d[this.name] != 'object'){
+				oldvalue = d[this.name];
+				d[this.name]=[];
+				d[this.name].push(oldvalue);
+			}
+
+			d[this.name].push(this.value);
+		} else {
+			d[this.name] = this.value;
+		}
+	});
+	return d;
 }

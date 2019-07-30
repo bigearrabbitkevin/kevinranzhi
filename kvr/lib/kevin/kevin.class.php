@@ -12,6 +12,15 @@
  *  May you share freely, never taking more than you give.
  */
 
+//创建Errcode类
+function kevin_create_new_errcode() {
+	$ret = new stdclass();
+	$ret->errcode = 0;
+	$ret->errmsg  = '';
+	$ret->data  = null;
+	return $ret;
+}
+
 /**
  * The kevin class.
  * 
